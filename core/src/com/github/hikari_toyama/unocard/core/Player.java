@@ -51,12 +51,12 @@ public class Player {
     /**
      * Strong color.
      */
-    Color strongColor = Color.NONE;
+    CardColor strongCardColor = CardColor.NONE;
 
     /**
      * Weak color.
      */
-    Color weakColor = Color.NONE;
+    CardColor weakCardColor = CardColor.NONE;
 
     /**
      * Recent played card. If the player drew one or more cards in its last
@@ -139,8 +139,8 @@ public class Player {
      * @return This player's strong color, or Color.NONE if no available
      * strong color.
      */
-    public Color getStrongColor() {
-        return strongColor;
+    public CardColor getStrongColor() {
+        return strongCardColor;
     } // getStrongColor()
 
     /**
@@ -152,8 +152,8 @@ public class Player {
      * @return This player's weak color, or Color.NONE if no available weak
      * color.
      */
-    public Color getWeakColor() {
-        return weakColor;
+    public CardColor getWeakColor() {
+        return weakCardColor;
     } // getWeakColor()
 
     /**

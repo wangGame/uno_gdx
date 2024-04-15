@@ -3565,7 +3565,7 @@
 2023-02-21 17:35:34.211 12196-12327/? E/GL2JNIView: Before eglCreateContext 2: EGL error: 0x3004
 2023-02-21 17:35:34.211 12196-12327/? W/GL2JNIView: Returning a GLES 2 context
 2023-02-21 17:35:34.215 8836-8850/? I/FontLog: Fetch {Google Sans, wdth 100.0, wght 700, ital 0.0, bestEffort false} end status Status{statusCode=SUCCESS, resolution=null} [CONTEXT service_id=132 ]
-2023-02-21 17:35:34.217 720-720/? I/SDM: HWCDisplay::GetColorModeCount: Supported color mode count = 3
+2023-02-21 17:35:34.217 720-720/? I/SDM: HWCDisplay::GetColorModeCount: Supported cardColor mode count = 3
 2023-02-21 17:35:34.218 8836-8850/? I/FontLog: Pulling font file for id = 392, cache size = 5 [CONTEXT service_id=132 ]
 2023-02-21 17:35:34.218 12196-12327/? I/AndroidGraphics: OGL renderer: Adreno (TM) 640
 2023-02-21 17:35:34.218 12196-12327/? I/AndroidGraphics: OGL vendor: Qualcomm
@@ -4143,7 +4143,7 @@
 2023-02-21 17:35:36.128 12196-12557/? D/ReflectedParamUpdater: extent() != 1 for single value type: output.buffers.pool-ids.values
 2023-02-21 17:35:36.128 12495-12559/? I/Finsky:background: [46] msq.h(1): getDownloads()
 2023-02-21 17:35:36.128 12196-12557/? D/CCodecConfig: ignoring local param raw.size (0xd2001800) as it is already supported
-2023-02-21 17:35:36.128 12196-12557/? D/CCodecConfig: ignoring local param default.color (0x5200180b) as it is already supported
+2023-02-21 17:35:36.128 12196-12557/? D/CCodecConfig: ignoring local param default.cardColor (0x5200180b) as it is already supported
 2023-02-21 17:35:36.128 12196-12557/? D/CCodecConfig: ignoring local param raw.hdr-static-info (0xd200180a) as it is already supported
 2023-02-21 17:35:36.128 12196-12557/? I/CCodecConfig: query failed after returning 18 values (BAD_INDEX)
 2023-02-21 17:35:36.128 12196-12557/? D/CCodecConfig: c2 config diff is Dict {
@@ -4154,27 +4154,27 @@
       c2::float coded.frame-rate.value = 30
       c2::u32 coded.pl.level = 20480
       c2::u32 coded.pl.profile = 20480
-      c2::u32 coded.vui.color.matrix = 0
-      c2::u32 coded.vui.color.primaries = 0
-      c2::u32 coded.vui.color.range = 0
-      c2::u32 coded.vui.color.transfer = 0
-      c2::u32 default.color.matrix = 0
-      c2::u32 default.color.primaries = 0
-      c2::u32 default.color.range = 0
-      c2::u32 default.color.transfer = 0
+      c2::u32 coded.vui.cardColor.matrix = 0
+      c2::u32 coded.vui.cardColor.primaries = 0
+      c2::u32 coded.vui.cardColor.range = 0
+      c2::u32 coded.vui.cardColor.transfer = 0
+      c2::u32 default.cardColor.matrix = 0
+      c2::u32 default.cardColor.primaries = 0
+      c2::u32 default.cardColor.range = 0
+      c2::u32 default.cardColor.transfer = 0
       c2::u32 input.buffers.max-size.value = 7077888
       c2::u32 input.delay.value = 0
       string input.media-type.value = "video/avc"
       c2::u32 output.delay.value = 18
       string output.media-type.value = "video/raw"
-      c2::u32 raw.color.matrix = 0
-      c2::u32 raw.color.primaries = 0
-      c2::u32 raw.color.range = 0
-      c2::u32 raw.color.transfer = 0
+      c2::u32 raw.cardColor.matrix = 0
+      c2::u32 raw.cardColor.primaries = 0
+      c2::u32 raw.cardColor.range = 0
+      c2::u32 raw.cardColor.transfer = 0
       c2::float raw.hdr-static-info.mastering.blue.x = 0
       c2::float raw.hdr-static-info.mastering.blue.y = 0
 
-2023-02-21 17:35:36.129 12196-12557/? W/ColorUtils: expected specified color aspects (0:0:0:0)
+2023-02-21 17:35:36.129 12196-12557/? W/ColorUtils: expected specified cardColor aspects (0:0:0:0)
 2023-02-21 17:35:36.130 12196-12555/? I/MediaCodec: MediaCodec will operate in async mode
 2023-02-21 17:35:36.130 12196-12555/? D/SurfaceUtils: connecting to surface 0xb400006f79025af0, reason connectToSurface
 2023-02-21 17:35:36.130 12196-12555/? I/MediaCodec: [c2.qti.avc.decoder] setting surface generation to 12488705
@@ -4212,9 +4212,9 @@
       int32_t android._color-format = 2141391878
       int32_t android._video-scaling = 1
       int32_t android._dataspace = 260
-      int32_t color-standard = 1
-      int32_t color-range = 2
-      int32_t color-transfer = 3
+      int32_t cardColor-standard = 1
+      int32_t cardColor-range = 2
+      int32_t cardColor-transfer = 3
       int32_t sar-height = 1
       int32_t rotation-degrees = 0
       Buffer hdr-static-info = {
@@ -4231,7 +4231,7 @@
       int32_t max-width = 1280
       string mime = "video/raw"
       int32_t priority = 0
-      int32_t color-format = 2130708361
+      int32_t cardColor-format = 2130708361
     }
 2023-02-21 17:35:36.132 12196-12557/? I/CCodecConfig: query failed after returning 18 values (BAD_INDEX)
 2023-02-21 17:35:36.132 12196-12541/? D/MediaCodec: keep callback message for reclaim
@@ -4310,10 +4310,10 @@
 2023-02-21 17:35:37.159 1436-1815/? D/AudioFlinger: Client defaulted notificationFrames to 5512 for frameCount 11025
 2023-02-21 17:35:37.162 1436-1815/? D/AF::TrackHandle: OpPlayAudio: track:636 usage:1 not muted
 2023-02-21 17:35:37.178 12196-12557/? D/CCodecConfig: c2 config diff is   c2::u32 output.delay.value = 13
-      c2::u32 raw.color.matrix = 1
-      c2::u32 raw.color.primaries = 1
-      c2::u32 raw.color.range = 2
-      c2::u32 raw.color.transfer = 3
+      c2::u32 raw.cardColor.matrix = 1
+      c2::u32 raw.cardColor.primaries = 1
+      c2::u32 raw.cardColor.range = 2
+      c2::u32 raw.cardColor.transfer = 3
       c2::u32 raw.crop.height = 720
       c2::u32 raw.crop.left = 0
       c2::u32 raw.crop.top = 0

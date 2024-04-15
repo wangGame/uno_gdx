@@ -33,7 +33,7 @@ public class Card implements Comparable<Card> {
     /**
      * Card's color, e.g. Color.BLUE
      */
-    public final Color color;
+    public final CardColor cardColor;
 
     /**
      * Card's image resource ID, e.g. Imgcodecs.imread
@@ -66,7 +66,7 @@ public class Card implements Comparable<Card> {
     /**
      * Constructor. Provide parameters for an Uno card and create its instance.
      */
-    Card(Image image, Image darkImg, Color color, Content content) {
+    Card(Image image, Image darkImg, CardColor cardColor, Content content) {
         if (image == null) {
             throw new IllegalArgumentException("DO NOT PASS NULL PARAMETER!!!");
         } // if (image == null)
@@ -75,7 +75,7 @@ public class Card implements Comparable<Card> {
             throw new IllegalArgumentException("DO NOT PASS NULL PARAMETER!!!");
         } // if (darkImg == null)
 
-        if (color == null) {
+        if (cardColor == null) {
             throw new IllegalArgumentException("DO NOT PASS NULL PARAMETER!!!");
         } // if (color == null)
 
@@ -83,14 +83,14 @@ public class Card implements Comparable<Card> {
             throw new IllegalArgumentException("DO NOT PASS NULL PARAMETER!!!");
         } // if (content == null)
 
-        this.color = color;
+        this.cardColor = cardColor;
         this.image = image;
         this.darkImg = darkImg;
         this.content = content;
-        this.name = A[color.ordinal()] + B[content.ordinal()];
+        this.name = A[cardColor.ordinal()] + B[content.ordinal()];
         this.id = isWild()
                 ? 39 + content.ordinal()
-                : 13 * (color.ordinal() - 1) + content.ordinal();
+                : 13 * (cardColor.ordinal() - 1) + content.ordinal();
     } // Card(Mat, Mat, Color, Content) (Class Constructor)
 
     /**
@@ -109,7 +109,7 @@ public class Card implements Comparable<Card> {
      * @return Whether the card is a [wild] or [wild +4].
      */
     public boolean isWild() {
-        return color == Color.NONE;
+        return cardColor == CardColor.NONE;
     } // isWild()
 } // Card Class
 

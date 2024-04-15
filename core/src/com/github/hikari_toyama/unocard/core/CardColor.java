@@ -12,7 +12,7 @@ package com.github.hikari_toyama.unocard.core;
 /**
  * Uno Color Enumeration.
  */
-public enum Color {
+public enum CardColor {
     NONE, RED, BLUE, GREEN, YELLOW
 } // Color Enum
 

@@ -9,11 +9,11 @@
 
 package com.github.hikari_toyama.unocard.core;
 
-import static com.github.hikari_toyama.unocard.core.Color.BLUE;
-import static com.github.hikari_toyama.unocard.core.Color.GREEN;
-import static com.github.hikari_toyama.unocard.core.Color.NONE;
-import static com.github.hikari_toyama.unocard.core.Color.RED;
-import static com.github.hikari_toyama.unocard.core.Color.YELLOW;
+import static com.github.hikari_toyama.unocard.core.CardColor.BLUE;
+import static com.github.hikari_toyama.unocard.core.CardColor.GREEN;
+import static com.github.hikari_toyama.unocard.core.CardColor.NONE;
+import static com.github.hikari_toyama.unocard.core.CardColor.RED;
+import static com.github.hikari_toyama.unocard.core.CardColor.YELLOW;
 import static com.github.hikari_toyama.unocard.core.Content.NUM0;
 import static com.github.hikari_toyama.unocard.core.Content.NUM7;
 import static com.github.hikari_toyama.unocard.core.Content.WILD;
@@ -54,35 +54,35 @@ public class AI {
      *
      * @return Current player's best color.
      */
-    public Color calcBestColor4NowPlayer() {
-        Color bestColor = NONE;
+    public CardColor calcBestColor4NowPlayer() {
+        CardColor bestCardColor = NONE;
         Player next = uno.getNextPlayer();
         Player oppo = uno.getOppoPlayer();
         Player prev = uno.getPrevPlayer();
-        Color nextWeak = next.getWeakColor();
-        Color oppoWeak = oppo.getWeakColor();
-        Color prevWeak = prev.getWeakColor();
-        Color nextStrong = next.getStrongColor();
-        Color oppoStrong = oppo.getStrongColor();
-        Color prevStrong = prev.getStrongColor();
+        CardColor nextWeak = next.getWeakColor();
+        CardColor oppoWeak = oppo.getWeakColor();
+        CardColor prevWeak = prev.getWeakColor();
+        CardColor nextStrong = next.getStrongColor();
+        CardColor oppoStrong = oppo.getStrongColor();
+        CardColor prevStrong = prev.getStrongColor();
         boolean nextIsUno = next.getHandSize() == 1;
         boolean oppoIsUno = next.getHandSize() == 1;
         boolean prevIsUno = next.getHandSize() == 1;
 
         // When defensing UNO dash, use others' weak color as your best color
         if (nextIsUno && nextWeak != NONE) {
-            bestColor = nextWeak;
+            bestCardColor = nextWeak;
         } // if (nextIsUno && nextWeak != NONE)
         else if (oppoIsUno && oppoWeak != NONE && !uno.is2vs2()) {
-            bestColor = oppoWeak;
+            bestCardColor = oppoWeak;
         } // else if (oppoIsUno && oppoWeak != NONE && !uno.is2vs2())
         else if (prevIsUno && prevWeak != NONE) {
-            bestColor = prevWeak;
+            bestCardColor = prevWeak;
         } // else if (prevIsUno && prevWeak != NONE)
         else if (uno.is2vs2() &&
                 oppoStrong != NONE &&
                 oppo.getHandSize() <= uno.getCurrPlayer().getHandSize()) {
-            bestColor = oppoStrong;
+            bestCardColor = oppoStrong;
         } // else if (uno.is2vs2() && ...)
         else {
             int[] score = {0, 0, 0, 0, 0};
@@ -95,41 +95,41 @@ public class AI {
 
                     case REV:
                     case NUM0:
-                        score[card.color.ordinal()] += 2;
+                        score[card.cardColor.ordinal()] += 2;
                         break; // case REV, NUM0
 
                     case SKIP:
                     case DRAW2:
-                        score[card.color.ordinal()] += 5;
+                        score[card.cardColor.ordinal()] += 5;
                         break; // case SKIP, DRAW2
 
                     default:
-                        score[card.color.ordinal()] += 4;
+                        score[card.cardColor.ordinal()] += 4;
                         break; // default
                 } // switch (card.content)
             } // for (Card card : uno.getCurrPlayer().getHandCards())
 
             // Calculate the best color
-            if (score[RED.ordinal()] > score[bestColor.ordinal()]) {
-                bestColor = RED;
+            if (score[RED.ordinal()] > score[bestCardColor.ordinal()]) {
+                bestCardColor = RED;
             } // if (score[RED.ordinal()] > score[bestColor.ordinal()])
 
-            if (score[BLUE.ordinal()] > score[bestColor.ordinal()]) {
-                bestColor = BLUE;
+            if (score[BLUE.ordinal()] > score[bestCardColor.ordinal()]) {
+                bestCardColor = BLUE;
             } // if (score[BLUE.ordinal()] > score[bestColor.ordinal()])
 
-            if (score[GREEN.ordinal()] > score[bestColor.ordinal()]) {
-                bestColor = GREEN;
+            if (score[GREEN.ordinal()] > score[bestCardColor.ordinal()]) {
+                bestCardColor = GREEN;
             } // if (score[GREEN.ordinal()] > score[bestColor.ordinal()])
 
-            if (score[YELLOW.ordinal()] > score[bestColor.ordinal()]) {
-                bestColor = YELLOW;
+            if (score[YELLOW.ordinal()] > score[bestCardColor.ordinal()]) {
+                bestCardColor = YELLOW;
             } // if (score[YELLOW.ordinal()] > score[bestColor.ordinal()])
 
-            if (bestColor == NONE) {
+            if (bestCardColor == NONE) {
                 // Only wild cards in hand
                 // Use others' weak color as your best color
-                bestColor
+                bestCardColor
                         = prevWeak != NONE ? prevWeak
                         : oppoWeak != NONE && !uno.is2vs2() ? oppoWeak
                         : nextWeak != NONE ? nextWeak : RED;
@@ -138,13 +138,13 @@ public class AI {
 
         // Determine your best color in dangerous cases. Be careful of the
         // conflict with other opponents' strong colors.
-        while ((nextIsUno && bestColor == nextStrong)
-                || (oppoIsUno && bestColor == oppoStrong && !uno.is2vs2())
-                || (prevIsUno && bestColor == prevStrong)) {
-            bestColor = Color.values()[Uno.RNG.nextInt(4) + 1];
+        while ((nextIsUno && bestCardColor == nextStrong)
+                || (oppoIsUno && bestCardColor == oppoStrong && !uno.is2vs2())
+                || (prevIsUno && bestCardColor == prevStrong)) {
+            bestCardColor = CardColor.values()[Uno.RNG.nextInt(4) + 1];
         } // while (nextIsUno && bestColor == nextStrong || ...)
 
-        return bestColor;
+        return bestCardColor;
     } // calcBestColor4NowPlayer()
 
     /**
@@ -199,8 +199,8 @@ public class AI {
      * @return True if it's necessary to make a challenge.
      */
     public boolean needToChallenge() {
-        Color lastColor = uno.lastColor();
-        Color next2lastColor = uno.next2lastColor();
+        CardColor lastCardColor = uno.lastColor();
+        CardColor next2LastCardColor = uno.next2lastColor();
         int s1 = uno.getNextPlayer().getHandSize();
         int s2 = uno.getCurrPlayer().getHandSize();
 
@@ -208,14 +208,14 @@ public class AI {
         // Challenge when I have 10 or more cards already
         // Challenge when previous player holds 10 or more cards
         // Challenge when legal color has not been changed
-        return s1 == 1 || Math.max(s1, s2) >= 10 || lastColor == next2lastColor;
+        return s1 == 1 || Math.max(s1, s2) >= 10 || lastCardColor == next2LastCardColor;
     } // needToChallenge()
 
     /**
      * AI Strategies (Difficulty: EASY). Analyze current player's hand cards,
      * and calculate which is the best card to play out.
      *
-     * @param outColor This is a out parameter. Pass a Color array (length>=1)
+     * @param outCardColor This is a out parameter. Pass a Color array (length>=1)
      *                 in order to let us pass the return value by assigning
      *                 outColor[0]. When the best card to play becomes a wild
      *                 card, outColor[0] will become the following legal color
@@ -225,23 +225,23 @@ public class AI {
      * @return Index of the best card to play, in current player's hand.
      * Or a negative number that means no appropriate card to play.
      */
-    public int easyAI_bestCardIndex4NowPlayer(Color[] outColor) {
+    public int easyAI_bestCardIndex4NowPlayer(CardColor[] outCardColor) {
         Card card;
         String errMsg;
         int yourSize, nextSize;
         int oppoSize, prevSize;
-        Color bestColor, lastColor;
+        CardColor bestCardColor, lastCardColor;
         int i, i0, i7, iBest, matches;
         int iNM, iRV, iSK, iDW, iWD, iWD4;
         Player next = uno.getNextPlayer();
         Player oppo = uno.getOppoPlayer();
         Player prev = uno.getPrevPlayer();
-        Color nextStrong = next.getStrongColor();
-        Color oppoStrong = oppo.getStrongColor();
-        Color prevStrong = prev.getStrongColor();
+        CardColor nextStrong = next.getStrongColor();
+        CardColor oppoStrong = oppo.getStrongColor();
+        CardColor prevStrong = prev.getStrongColor();
         List<Card> hand = uno.getCurrPlayer().getHandCards();
 
-        if (outColor == null || outColor.length == 0) {
+        if (outCardColor == null || outCardColor.length == 0) {
             errMsg = "outColor cannot be null or Color[0]";
             throw new IllegalArgumentException(errMsg);
         }  // if (outColor == null || outColor.length == 0)
@@ -250,34 +250,34 @@ public class AI {
         if (yourSize == 1) {
             // Only one card remained. Play it when it's legal.
             card = hand.get(0);
-            outColor[0] = card.color;
+            outCardColor[0] = card.cardColor;
             return uno.isLegalToPlay(card) ? 0 : -1;
         } // if (yourSize == 1)
 
-        lastColor = uno.lastColor();
-        bestColor = calcBestColor4NowPlayer();
+        lastCardColor = uno.lastColor();
+        bestCardColor = calcBestColor4NowPlayer();
         iBest = i0 = i7 = iNM = iRV = iSK = iDW = iWD = iWD4 = -1;
         for (i = matches = 0; i < yourSize; ++i) {
             // Index of any kind
             card = hand.get(i);
-            if (card.color == lastColor) {
+            if (card.cardColor == lastCardColor) {
                 ++matches;
             } // if (card.color == lastColor)
 
             if (uno.isLegalToPlay(card)) {
                 switch (card.content) {
                     case DRAW2:
-                        if (iDW < 0 || card.color == bestColor)
+                        if (iDW < 0 || card.cardColor == bestCardColor)
                             iDW = i;
                         break; // case DRAW2
 
                     case SKIP:
-                        if (iSK < 0 || card.color == bestColor)
+                        if (iSK < 0 || card.cardColor == bestCardColor)
                             iSK = i;
                         break; // case SKIP
 
                     case REV:
-                        if (iRV < 0 || card.color == bestColor)
+                        if (iRV < 0 || card.cardColor == bestCardColor)
                             iRV = i;
                         break; // case REV
 
@@ -291,7 +291,7 @@ public class AI {
 
                     case NUM7:
                         if (uno.isSevenZeroRule()) {
-                            if (i7 < 0 || card.color == bestColor)
+                            if (i7 < 0 || card.cardColor == bestCardColor)
                                 i7 = i;
                             break; // case NUM7
                         } // if (uno.isSevenZeroRule())
@@ -299,14 +299,14 @@ public class AI {
 
                     case NUM0:
                         if (uno.isSevenZeroRule()) {
-                            if (i0 < 0 || card.color == bestColor)
+                            if (i0 < 0 || card.cardColor == bestCardColor)
                                 i0 = i;
                             break; // case NUM0
                         } // if (uno.isSevenZeroRule())
                         // fall through
 
                     default: // number cards
-                        if (iNM < 0 || card.color == bestColor)
+                        if (iNM < 0 || card.cardColor == bestCardColor)
                             iNM = i;
                         break; // default
                 } // switch (card.content)
@@ -325,13 +325,13 @@ public class AI {
                     || (hand.get(1 - i7).content != NUM7
                     && hand.get(1 - i7).content != WILD
                     && hand.get(1 - i7).content != WILD_DRAW4
-                    && hand.get(1 - i7).color != hand.get(i7).color)))
+                    && hand.get(1 - i7).cardColor != hand.get(i7).cardColor)))
                 iBest = i7;
             else if (i0 >= 0 && (yourSize > 2
                     || (hand.get(1 - i0).content != NUM0
                     && hand.get(1 - i0).content != WILD
                     && hand.get(1 - i0).content != WILD_DRAW4
-                    && hand.get(1 - i0).color != hand.get(i0).color)))
+                    && hand.get(1 - i0).cardColor != hand.get(i0).cardColor)))
                 iBest = i0;
             else if (iDW >= 0)
                 iBest = iDW;
@@ -341,11 +341,11 @@ public class AI {
                 iBest = iRV;
             else if (iWD4 >= 0 && matches == 0)
                 iBest = iWD4;
-            else if (iWD >= 0 && lastColor != bestColor)
+            else if (iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            else if (iWD4 >= 0 && lastColor != bestColor)
+            else if (iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
-            else if (iNM >= 0 && hand.get(iNM).color != nextStrong)
+            else if (iNM >= 0 && hand.get(iNM).cardColor != nextStrong)
                 iBest = iNM;
             else if (iWD >= 0 && i7 + i0 > -2)
                 iBest = iWD;
@@ -357,15 +357,15 @@ public class AI {
                 iBest = i0;
             else if (i7 >= 0)
                 iBest = i7;
-            else if (iNM >= 0 && hand.get(iNM).color != prevStrong)
+            else if (iNM >= 0 && hand.get(iNM).cardColor != prevStrong)
                 iBest = iNM;
-            else if (iSK >= 0 && hand.get(iSK).color != prevStrong)
+            else if (iSK >= 0 && hand.get(iSK).cardColor != prevStrong)
                 iBest = iSK;
-            else if (iDW >= 0 && hand.get(iDW).color != prevStrong)
+            else if (iDW >= 0 && hand.get(iDW).cardColor != prevStrong)
                 iBest = iDW;
-            else if (iWD >= 0 && lastColor != bestColor)
+            else if (iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            else if (iWD4 >= 0 && lastColor != bestColor)
+            else if (iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
             else if (iNM >= 0)
                 iBest = iNM;
@@ -377,28 +377,28 @@ public class AI {
                 iBest = i7;
             else if (i0 >= 0)
                 iBest = i0;
-            else if (iNM >= 0 && hand.get(iNM).color != oppoStrong)
+            else if (iNM >= 0 && hand.get(iNM).cardColor != oppoStrong)
                 iBest = iNM;
             else if (iRV >= 0 && prevSize > nextSize)
                 iBest = iRV;
-            else if (iSK >= 0 && hand.get(iSK).color != oppoStrong)
+            else if (iSK >= 0 && hand.get(iSK).cardColor != oppoStrong)
                 iBest = iSK;
-            else if (iDW >= 0 && hand.get(iDW).color != oppoStrong)
+            else if (iDW >= 0 && hand.get(iDW).cardColor != oppoStrong)
                 iBest = iDW;
-            else if (iWD >= 0 && lastColor != bestColor)
+            else if (iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            else if (iWD4 >= 0 && lastColor != bestColor)
+            else if (iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
             else if (iNM >= 0)
                 iBest = iNM;
         } // else if (oppoSize == 1)
         else {
             // Normal strategies
-            if (i0 >= 0 && hand.get(i0).color == prevStrong)
+            if (i0 >= 0 && hand.get(i0).cardColor == prevStrong)
                 iBest = i0;
-            else if (i7 >= 0 && (hand.get(i7).color == prevStrong
-                    || hand.get(i7).color == oppoStrong
-                    || hand.get(i7).color == nextStrong))
+            else if (i7 >= 0 && (hand.get(i7).cardColor == prevStrong
+                    || hand.get(i7).cardColor == oppoStrong
+                    || hand.get(i7).cardColor == nextStrong))
                 iBest = i7;
             else if (iRV >= 0 && (prevSize > nextSize
                     || prev.getRecent() == null))
@@ -419,13 +419,13 @@ public class AI {
                     || (hand.get(1 - i0).content != NUM0
                     && hand.get(1 - i0).content != WILD
                     && hand.get(1 - i0).content != WILD_DRAW4
-                    && hand.get(1 - i0).color != hand.get(i0).color)))
+                    && hand.get(1 - i0).cardColor != hand.get(i0).cardColor)))
                 iBest = i0;
             else if (i7 >= 0)
                 iBest = i7;
         } // else
 
-        outColor[0] = bestColor;
+        outCardColor[0] = bestCardColor;
         return iBest;
     } // easyAI_bestCardIndex4NowPlayer(Color[])
 
@@ -433,7 +433,7 @@ public class AI {
      * AI Strategies (Difficulty: HARD). Analyze current player's hand cards,
      * and calculate which is the best card to play.
      *
-     * @param outColor This is a out parameter. Pass a Color array (length>=1)
+     * @param outCardColor This is a out parameter. Pass a Color array (length>=1)
      *                 in order to let us pass the return value by assigning
      *                 outColor[0]. When the best card to play becomes a wild
      *                 card, outColor[0] will become the following legal color
@@ -443,25 +443,25 @@ public class AI {
      * @return Index of the best card to play, in current player's hand.
      * Or a negative number that means no appropriate card to play.
      */
-    public int hardAI_bestCardIndex4NowPlayer(Color[] outColor) {
+    public int hardAI_bestCardIndex4NowPlayer(CardColor[] outCardColor) {
         Card card;
         String errMsg;
         boolean allWild;
         int yourSize, nextSize;
         int oppoSize, prevSize;
-        Color bestColor, lastColor;
+        CardColor bestCardColor, lastCardColor;
         int i, iBest, matches, score;
         int iRV, iSK, iDW, iWD, iWD4;
         Player next = uno.getNextPlayer();
         Player oppo = uno.getOppoPlayer();
         Player prev = uno.getPrevPlayer();
-        Color nextWeak = next.getWeakColor();
-        Color nextStrong = next.getStrongColor();
-        Color oppoStrong = oppo.getStrongColor();
-        Color prevStrong = prev.getStrongColor();
+        CardColor nextWeak = next.getWeakColor();
+        CardColor nextStrong = next.getStrongColor();
+        CardColor oppoStrong = oppo.getStrongColor();
+        CardColor prevStrong = prev.getStrongColor();
         List<Card> hand = uno.getCurrPlayer().getHandCards();
 
-        if (outColor == null || outColor.length == 0) {
+        if (outCardColor == null || outCardColor.length == 0) {
             errMsg = "outColor cannot be null or Color[0]";
             throw new IllegalArgumentException(errMsg);
         }  // if (outColor == null || outColor.length == 0)
@@ -470,37 +470,37 @@ public class AI {
         if (yourSize == 1) {
             // Only one card remained. Play it when it's legal.
             card = hand.get(0);
-            outColor[0] = card.color;
+            outCardColor[0] = card.cardColor;
             return uno.isLegalToPlay(card) ? 0 : -1;
         } // if (yourSize == 1)
 
         allWild = true;
         candidates.clear();
-        lastColor = uno.lastColor();
-        bestColor = calcBestColor4NowPlayer();
+        lastCardColor = uno.lastColor();
+        bestCardColor = calcBestColor4NowPlayer();
         iBest = iRV = iSK = iDW = iWD = iWD4 = -1;
         for (i = matches = 0; i < yourSize; ++i) {
             // Index of any kind
             card = hand.get(i);
             allWild = allWild && card.isWild();
-            if (card.color == lastColor) {
+            if (card.cardColor == lastCardColor) {
                 ++matches;
             } // if (card.color == lastColor)
 
             if (uno.isLegalToPlay(card)) {
                 switch (card.content) {
                     case DRAW2:
-                        if (iDW < 0 || card.color == bestColor)
+                        if (iDW < 0 || card.cardColor == bestCardColor)
                             iDW = i;
                         break; // case DRAW2
 
                     case SKIP:
-                        if (iSK < 0 || card.color == bestColor)
+                        if (iSK < 0 || card.cardColor == bestCardColor)
                             iSK = i;
                         break; // case SKIP
 
                     case REV:
-                        if (iRV < 0 || card.color == bestColor)
+                        if (iRV < 0 || card.cardColor == bestCardColor)
                             iRV = i;
                         break; // case REV
 
@@ -520,9 +520,9 @@ public class AI {
                         // by your opponents. e.g. When you put down the 8th
                         // [nine] card after 7 [nine] cards appeared, no one
                         // can change the color by using another [nine] card.
-                        score = -1000000 * (card.color == bestColor ? 1 : 0)
+                        score = -1000000 * (card.cardColor == bestCardColor ? 1 : 0)
                                 - 10000 * uno.getContentAnalysis(card.content)
-                                - 100 * uno.getColorAnalysis(card.color)
+                                - 100 * uno.getColorAnalysis(card.cardColor)
                                 - i;
                         candidates.put(score, card);
                         break; // default
@@ -539,7 +539,7 @@ public class AI {
             // Limit your next player's action as well as you can.
             if (iDW >= 0)
                 iBest = iDW;
-            else if (lastColor == nextStrong) {
+            else if (lastCardColor == nextStrong) {
                 // Priority when next called Uno & lastColor == nextStrong:
                 // 0: Number cards, NOT in color of nextStrong
                 // 1: Skip cards, in any color
@@ -549,7 +549,7 @@ public class AI {
                 // 5: Draw one, and pray to get one of the above...
                 for (int can : candidates.keySet()) {
                     i = -can % 100;
-                    if (hand.get(i).color != nextStrong) {
+                    if (hand.get(i).cardColor != nextStrong) {
                         iBest = i;
                         break;
                     } // if (hand.get(i).color != nextStrong)
@@ -572,16 +572,16 @@ public class AI {
                 // 3: Draw one because it's not necessary to use wild cards
                 for (int can : candidates.keySet()) {
                     i = -can % 100;
-                    if (hand.get(i).color != nextStrong) {
+                    if (hand.get(i).cardColor != nextStrong) {
                         iBest = i;
                         break;
                     } // if (hand.get(i).color != nextStrong)
                 } // for (int can : candidates.keySet())
                 if (iBest < 0 && iRV >= 0 && prevSize >= 4 &&
-                        hand.get(iRV).color != nextStrong)
+                        hand.get(iRV).cardColor != nextStrong)
                     iBest = iRV;
                 if (iBest < 0 && iSK >= 0 &&
-                        hand.get(iSK).color != nextStrong)
+                        hand.get(iSK).cardColor != nextStrong)
                     iBest = iSK;
             } // else if (nextStrong != NONE)
             else {
@@ -601,7 +601,7 @@ public class AI {
                     iBest = iWD4;
                 // noinspection ConstantConditions
                 if (iBest < 0 && !candidates.isEmpty() &&
-                        candidates.firstEntry().getValue().color == bestColor)
+                        candidates.firstEntry().getValue().cardColor == bestCardColor)
                     iBest = -candidates.firstKey() % 100;
                 if (iBest < 0 && iWD >= 0)
                     iBest = iWD;
@@ -616,14 +616,14 @@ public class AI {
             // Save your action cards as much as you can, because once a reverse
             // card is put down, you can use these cards to limit your previous
             // player's action.
-            if (lastColor == prevStrong) {
+            if (lastCardColor == prevStrong) {
                 // Priority when prev called Uno & lastColor == prevStrong:
                 // 0: Skip cards, NOT in color of prevStrong
                 // 1: Wild cards, switch to your best color
                 // 2: Wild +4 cards, switch to your best color
                 // 3: Number cards, in any color, but firstly your best color
                 // 4: Draw one because it's not necessary to use other cards
-                if (iSK >= 0 && hand.get(iSK).color != prevStrong)
+                if (iSK >= 0 && hand.get(iSK).cardColor != prevStrong)
                     iBest = iSK;
                 if (iBest < 0 && iWD >= 0)
                     iBest = iWD;
@@ -638,11 +638,11 @@ public class AI {
                 // 0: Reverse cards, NOT in color of prevStrong
                 // 1: Number cards, NOT in color of prevStrong
                 // 2: Draw one because it's not necessary to use other cards
-                if (iRV >= 0 && hand.get(iRV).color != prevStrong)
+                if (iRV >= 0 && hand.get(iRV).cardColor != prevStrong)
                     iBest = iRV;
                 if (iBest < 0) for (int can : candidates.keySet()) {
                     i = -can % 100;
-                    if (hand.get(i).color != prevStrong) {
+                    if (hand.get(i).cardColor != prevStrong) {
                         iBest = i;
                         break;
                     } // if (hand.get(i).color != prevStrong)
@@ -657,11 +657,11 @@ public class AI {
                 // 4: Draw one. DO NOT PLAY REVERSE CARDS!
                 // noinspection ConstantConditions
                 if (!candidates.isEmpty() &&
-                        candidates.firstEntry().getValue().color == bestColor)
+                        candidates.firstEntry().getValue().cardColor == bestCardColor)
                     iBest = -candidates.firstKey() % 100;
-                if (iBest < 0 && iWD >= 0 && lastColor != bestColor)
+                if (iBest < 0 && iWD >= 0 && lastCardColor != bestCardColor)
                     iBest = iWD;
-                if (iBest < 0 && iWD4 >= 0 && lastColor != bestColor)
+                if (iBest < 0 && iWD4 >= 0 && lastCardColor != bestCardColor)
                     iBest = iWD4;
                 if (iBest < 0 && !candidates.isEmpty())
                     iBest = -candidates.firstKey() % 100;
@@ -671,7 +671,7 @@ public class AI {
             // Strategies when your opposite player remains only one card.
             // Give more freedom to your next player, the only one that can
             // directly limit your opposite player's action.
-            if (lastColor == oppoStrong) {
+            if (lastCardColor == oppoStrong) {
                 // Priority when oppo called Uno & lastColor == oppoStrong:
                 // 0: Number cards, NOT in color of oppoStrong
                 // 1: Reverse cards, NOT in color of oppoStrong
@@ -686,19 +686,19 @@ public class AI {
                 //    (pray that next can limit oppo!)
                 for (int can : candidates.keySet()) {
                     i = -can % 100;
-                    if (hand.get(i).color != oppoStrong) {
+                    if (hand.get(i).cardColor != oppoStrong) {
                         iBest = i;
                         break;
                     } // if (hand.get(i).color != oppoStrong)
                 } // for (int can : candidates.keySet())
                 if (iBest < 0 && iRV >= 0 &&
-                        hand.get(iRV).color != oppoStrong)
+                        hand.get(iRV).cardColor != oppoStrong)
                     iBest = iRV;
                 if (iBest < 0 && iSK >= 0 &&
-                        hand.get(iSK).color != oppoStrong)
+                        hand.get(iSK).cardColor != oppoStrong)
                     iBest = iSK;
                 if (iBest < 0 && iDW >= 0 &&
-                        hand.get(iDW).color != oppoStrong)
+                        hand.get(iDW).cardColor != oppoStrong)
                     iBest = iDW;
                 if (iBest < 0 && iWD >= 0)
                     iBest = iWD;
@@ -719,19 +719,19 @@ public class AI {
                 // 4: Draw one because it's not necessary to use other cards
                 for (int can : candidates.keySet()) {
                     i = -can % 100;
-                    if (hand.get(i).color != oppoStrong) {
+                    if (hand.get(i).cardColor != oppoStrong) {
                         iBest = i;
                         break;
                     } // if (hand.get(i).color != oppoStrong)
                 } // for (int can : candidates.keySet())
                 if (iBest < 0 && iRV >= 0 &&
-                        hand.get(iRV).color != oppoStrong)
+                        hand.get(iRV).cardColor != oppoStrong)
                     iBest = iRV;
                 if (iBest < 0 && iSK >= 0 &&
-                        hand.get(iSK).color != oppoStrong)
+                        hand.get(iSK).cardColor != oppoStrong)
                     iBest = iSK;
                 if (iBest < 0 && iDW >= 0 &&
-                        hand.get(iDW).color != oppoStrong)
+                        hand.get(iDW).cardColor != oppoStrong)
                     iBest = iDW;
             } // else if (oppoStrong != NONE)
             else {
@@ -746,9 +746,9 @@ public class AI {
                     iBest = iRV;
                 if (iBest < 0 && !candidates.isEmpty())
                     iBest = -candidates.firstKey() % 100;
-                if (iBest < 0 && iWD >= 0 && lastColor != bestColor)
+                if (iBest < 0 && iWD >= 0 && lastCardColor != bestCardColor)
                     iBest = iWD;
-                if (iBest < 0 && iWD4 >= 0 && lastColor != bestColor &&
+                if (iBest < 0 && iWD4 >= 0 && lastCardColor != bestCardColor &&
                         nextSize <= 4)
                     iBest = iWD4;
             } // else
@@ -762,7 +762,7 @@ public class AI {
             else
                 iBest = iWD >= 0 ? iWD : iWD4;
         } // else if (allWild)
-        else if (lastColor == nextWeak && yourSize > 2) {
+        else if (lastCardColor == nextWeak && yourSize > 2) {
             // Strategies when your next player drew a card in its last action.
             // Unless keeping or changing to your best color, you do not need to
             // play your limitation/wild cards. Use them in more dangerous cases.
@@ -777,7 +777,7 @@ public class AI {
                 iBest = iRV;
             if (iBest < 0) for (int can : candidates.keySet()) {
                 i = -can % 100;
-                if (hand.get(i).color == nextWeak) {
+                if (hand.get(i).cardColor == nextWeak) {
                     iBest = i;
                     break;
                 } // if (hand.get(i).color == nextWeak)
@@ -788,10 +788,10 @@ public class AI {
                     (prevSize >= 4 || prev.getRecent() == null))
                 iBest = iRV;
             if (iBest < 0 && iSK >= 0 && oppoSize >= 3 &&
-                    hand.get(iSK).color == bestColor)
+                    hand.get(iSK).cardColor == bestCardColor)
                 iBest = iSK;
             if (iBest < 0 && iDW >= 0 && oppoSize >= 3 &&
-                    hand.get(iDW).color == bestColor)
+                    hand.get(iDW).cardColor == bestCardColor)
                 iBest = iDW;
         } // else if (lastColor == nextWeak && yourSize > 2)
         else {
@@ -819,10 +819,10 @@ public class AI {
             if (iBest < 0 && iRV >= 0 && prevSize >= 4)
                 iBest = iRV;
             if (iBest < 0 && iSK >= 0 && oppoSize >= 3 &&
-                    hand.get(iSK).color == bestColor)
+                    hand.get(iSK).cardColor == bestCardColor)
                 iBest = iSK;
             if (iBest < 0 && iDW >= 0 && oppoSize >= 3 &&
-                    hand.get(iDW).color == bestColor)
+                    hand.get(iDW).cardColor == bestCardColor)
                 iBest = iDW;
             if (iBest < 0 && iWD >= 0 && nextSize <= 4)
                 iBest = iWD;
@@ -849,7 +849,7 @@ public class AI {
             } // if (iBest < 0 && yourSize == Uno.MAX_HOLD_CARDS)
         } // else
 
-        outColor[0] = bestColor;
+        outCardColor[0] = bestCardColor;
         return iBest;
     } // hardAI_bestCardIndex4NowPlayer(Color[])
 
@@ -857,7 +857,7 @@ public class AI {
      * AI Strategies in 2vs2 special rule. Analyze current player's hand cards,
      * and calculate which is the best card to play out.
      *
-     * @param outColor This is a out parameter. Pass a Color array (length>=1)
+     * @param outCardColor This is a out parameter. Pass a Color array (length>=1)
      *                 in order to let us pass the return value by assigning
      *                 outColor[0]. When the best card to play becomes a wild
      *                 card, outColor[0] will become the following legal color
@@ -867,23 +867,23 @@ public class AI {
      * @return Index of the best card to play, in current player's hand.
      * Or a negative number that means no appropriate card to play.
      */
-    public int teamAI_bestCardIndex4NowPlayer(Color[] outColor) {
+    public int teamAI_bestCardIndex4NowPlayer(CardColor[] outCardColor) {
         Card card;
         String errMsg;
         int yourSize, nextSize;
         int oppoSize, prevSize;
-        Color bestColor, lastColor;
+        CardColor bestCardColor, lastCardColor;
         int i, iBest, matches, score;
         int iRV, iSK, iDW, iWD, iWD4;
         Player next = uno.getNextPlayer();
         Player oppo = uno.getOppoPlayer();
         Player prev = uno.getPrevPlayer();
-        Color nextStrong = next.getStrongColor();
-        Color oppoStrong = oppo.getStrongColor();
-        Color prevStrong = prev.getStrongColor();
+        CardColor nextStrong = next.getStrongColor();
+        CardColor oppoStrong = oppo.getStrongColor();
+        CardColor prevStrong = prev.getStrongColor();
         List<Card> hand = uno.getCurrPlayer().getHandCards();
 
-        if (outColor == null || outColor.length == 0) {
+        if (outCardColor == null || outCardColor.length == 0) {
             errMsg = "outColor cannot be null or Color[0]";
             throw new IllegalArgumentException(errMsg);
         }  // if (outColor == null || outColor.length == 0)
@@ -892,35 +892,35 @@ public class AI {
         if (yourSize == 1) {
             // Only one card remained. Play it when it's legal.
             card = hand.get(0);
-            outColor[0] = card.color;
+            outCardColor[0] = card.cardColor;
             return uno.isLegalToPlay(card) ? 0 : -1;
         } // if (yourSize == 1)
 
         candidates.clear();
-        lastColor = uno.lastColor();
-        bestColor = calcBestColor4NowPlayer();
+        lastCardColor = uno.lastColor();
+        bestCardColor = calcBestColor4NowPlayer();
         iBest = iRV = iSK = iDW = iWD = iWD4 = -1;
         for (i = matches = 0; i < yourSize; ++i) {
             // Index of any kind
             card = hand.get(i);
-            if (card.color == lastColor) {
+            if (card.cardColor == lastCardColor) {
                 ++matches;
             } // if (card.color == lastColor)
 
             if (uno.isLegalToPlay(card)) {
                 switch (card.content) {
                     case DRAW2:
-                        if (iDW < 0 || card.color == bestColor)
+                        if (iDW < 0 || card.cardColor == bestCardColor)
                             iDW = i;
                         break; // case DRAW2
 
                     case SKIP:
-                        if (iSK < 0 || card.color == bestColor)
+                        if (iSK < 0 || card.cardColor == bestCardColor)
                             iSK = i;
                         break; // case SKIP
 
                     case REV:
-                        if (iRV < 0 || card.color == bestColor)
+                        if (iRV < 0 || card.cardColor == bestCardColor)
                             iRV = i;
                         break; // case REV
 
@@ -940,9 +940,9 @@ public class AI {
                         // by your opponents. e.g. When you put down the 8th
                         // [nine] card after 7 [nine] cards appeared, no one
                         // can change the color by using another [nine] card.
-                        score = -1000000 * (card.color == bestColor ? 1 : 0)
+                        score = -1000000 * (card.cardColor == bestCardColor ? 1 : 0)
                                 - 10000 * uno.getContentAnalysis(card.content)
-                                - 100 * uno.getColorAnalysis(card.color)
+                                - 100 * uno.getColorAnalysis(card.cardColor)
                                 - i;
                         candidates.put(score, card);
                         break; // default
@@ -965,13 +965,13 @@ public class AI {
                 iBest = iRV;
             if (iBest < 0 && iWD4 >= 0 && matches == 0)
                 iBest = iWD4;
-            if (iBest < 0 && iWD >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            if (iBest < 0 && iWD4 >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
             if (iBest < 0) for (int can : candidates.keySet()) {
                 i = -can % 100;
-                if (hand.get(i).color != nextStrong) {
+                if (hand.get(i).cardColor != nextStrong) {
                     iBest = i;
                     break;
                 } // if (hand.get(i).color != nextStrong)
@@ -983,18 +983,18 @@ public class AI {
             // Strategies when your previous player remains only one card.
             for (int can : candidates.keySet()) {
                 i = -can % 100;
-                if (hand.get(i).color != prevStrong) {
+                if (hand.get(i).cardColor != prevStrong) {
                     iBest = i;
                     break;
                 } // if (hand.get(i).color != prevStrong)
             } // for (int can : candidates.keySet())
-            if (iBest < 0 && iSK >= 0 && hand.get(iSK).color != prevStrong)
+            if (iBest < 0 && iSK >= 0 && hand.get(iSK).cardColor != prevStrong)
                 iBest = iSK;
-            if (iBest < 0 && iDW >= 0 && hand.get(iDW).color != prevStrong)
+            if (iBest < 0 && iDW >= 0 && hand.get(iDW).cardColor != prevStrong)
                 iBest = iDW;
-            if (iBest < 0 && iWD >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            if (iBest < 0 && iWD4 >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
             if (iBest < 0 && !candidates.isEmpty())
                 iBest = -candidates.firstKey() % 100;
@@ -1007,17 +1007,17 @@ public class AI {
                 iBest = iDW;
             if (iBest < 0 && iWD4 >= 0 && matches == 0)
                 iBest = iWD4;
-            if (iBest < 0 && iRV >= 0 && hand.get(iRV).color == oppoStrong)
+            if (iBest < 0 && iRV >= 0 && hand.get(iRV).cardColor == oppoStrong)
                 iBest = iRV;
             if (iBest < 0) for (int can : candidates.keySet()) {
                 i = -can % 100;
-                if (hand.get(i).color == oppoStrong) {
+                if (hand.get(i).cardColor == oppoStrong) {
                     iBest = i;
                     break;
                 } // if (hand.get(i).color == oppoStrong)
             } // if (iBest < 0) for (int can : candidates.keySet())
             if (iBest < 0 && iWD >= 0 && oppoStrong != NONE
-                    && lastColor != oppoStrong)
+                    && lastCardColor != oppoStrong)
                 iBest = iWD;
             if (iBest < 0 && iRV >= 0 && prevSize < nextSize)
                 iBest = iRV;
@@ -1032,9 +1032,9 @@ public class AI {
         } // else if (oppoSize == 1)
         else {
             // Normal strategies
-            if (iSK >= 0 && hand.get(iSK).color == oppoStrong)
+            if (iSK >= 0 && hand.get(iSK).cardColor == oppoStrong)
                 iBest = iSK;
-            if (iBest < 0 && iRV >= 0 && (hand.get(iRV).color == oppoStrong
+            if (iBest < 0 && iRV >= 0 && (hand.get(iRV).cardColor == oppoStrong
                     || prev.getRecent() == null))
                 iBest = iRV;
             if (iBest < 0 && !candidates.isEmpty())
@@ -1045,13 +1045,13 @@ public class AI {
                 iBest = iDW;
             if (iBest < 0 && iRV >= 0)
                 iBest = iRV;
-            if (iBest < 0 && iWD >= 0 && lastColor != oppoStrong)
+            if (iBest < 0 && iWD >= 0 && lastCardColor != oppoStrong)
                 iBest = iWD;
-            if (iBest < 0 && iWD4 >= 0 && lastColor != oppoStrong)
+            if (iBest < 0 && iWD4 >= 0 && lastCardColor != oppoStrong)
                 iBest = iWD4;
         } // else
 
-        outColor[0] = bestColor;
+        outCardColor[0] = bestCardColor;
         return iBest;
     } // teamAI_bestCardIndex4NowPlayer(Color[])
 
@@ -1059,7 +1059,7 @@ public class AI {
      * AI Strategies in 7-0 special rule. Analyze current player's hand cards,
      * and calculate which is the best card to play out.
      *
-     * @param outColor This is a out parameter. Pass a Color array (length>=1)
+     * @param outCardColor This is a out parameter. Pass a Color array (length>=1)
      *                 in order to let us pass the return value by assigning
      *                 outColor[0]. When the best card to play becomes a wild
      *                 card, outColor[0] will become the following legal color
@@ -1069,23 +1069,23 @@ public class AI {
      * @return Index of the best card to play, in current player's hand.
      * Or a negative number that means no appropriate card to play.
      */
-    public int sevenZeroAI_bestCardIndex4NowPlayer(Color[] outColor) {
+    public int sevenZeroAI_bestCardIndex4NowPlayer(CardColor[] outCardColor) {
         Card card;
         String errMsg;
         int yourSize, nextSize;
         int oppoSize, prevSize;
-        Color bestColor, lastColor;
+        CardColor bestCardColor, lastCardColor;
         int i, i0, iBest, matches, score;
         int i7, iRV, iSK, iDW, iWD, iWD4;
         Player next = uno.getNextPlayer();
         Player oppo = uno.getOppoPlayer();
         Player prev = uno.getPrevPlayer();
-        Color nextStrong = next.getStrongColor();
-        Color oppoStrong = oppo.getStrongColor();
-        Color prevStrong = prev.getStrongColor();
+        CardColor nextStrong = next.getStrongColor();
+        CardColor oppoStrong = oppo.getStrongColor();
+        CardColor prevStrong = prev.getStrongColor();
         List<Card> hand = uno.getCurrPlayer().getHandCards();
 
-        if (outColor == null || outColor.length == 0) {
+        if (outCardColor == null || outCardColor.length == 0) {
             errMsg = "outColor cannot be null or Color[0]";
             throw new IllegalArgumentException(errMsg);
         }  // if (outColor == null || outColor.length == 0)
@@ -1094,35 +1094,35 @@ public class AI {
         if (yourSize == 1) {
             // Only one card remained. Play it when it's legal.
             card = hand.get(0);
-            outColor[0] = card.color;
+            outCardColor[0] = card.cardColor;
             return uno.isLegalToPlay(card) ? 0 : -1;
         } // if (yourSize == 1)
 
         candidates.clear();
-        lastColor = uno.lastColor();
-        bestColor = calcBestColor4NowPlayer();
+        lastCardColor = uno.lastColor();
+        bestCardColor = calcBestColor4NowPlayer();
         iBest = i0 = i7 = iRV = iSK = iDW = iWD = iWD4 = -1;
         for (i = matches = 0; i < yourSize; ++i) {
             // Index of any kind
             card = hand.get(i);
-            if (card.color == lastColor) {
+            if (card.cardColor == lastCardColor) {
                 ++matches;
             } // if (card.color == lastColor)
 
             if (uno.isLegalToPlay(card)) {
                 switch (card.content) {
                     case DRAW2:
-                        if (iDW < 0 || card.color == bestColor)
+                        if (iDW < 0 || card.cardColor == bestCardColor)
                             iDW = i;
                         break; // case DRAW2
 
                     case SKIP:
-                        if (iSK < 0 || card.color == bestColor)
+                        if (iSK < 0 || card.cardColor == bestCardColor)
                             iSK = i;
                         break; // case SKIP
 
                     case REV:
-                        if (iRV < 0 || card.color == bestColor)
+                        if (iRV < 0 || card.cardColor == bestCardColor)
                             iRV = i;
                         break; // case REV
 
@@ -1135,12 +1135,12 @@ public class AI {
                         break; // case WILD_DRAW4
 
                     case NUM7:
-                        if (i7 < 0 || card.color == bestColor)
+                        if (i7 < 0 || card.cardColor == bestCardColor)
                             i7 = i;
                         break; // case NUM7
 
                     case NUM0:
-                        if (i0 < 0 || card.color == bestColor)
+                        if (i0 < 0 || card.cardColor == bestCardColor)
                             i0 = i;
                         break; // case NUM0
 
@@ -1152,9 +1152,9 @@ public class AI {
                         // by your opponents. e.g. When you put down the 8th
                         // [nine] card after 7 [nine] cards appeared, no one
                         // can change the color by using another [nine] card.
-                        score = -1000000 * (card.color == bestColor ? 1 : 0)
+                        score = -1000000 * (card.cardColor == bestCardColor ? 1 : 0)
                                 - 10000 * uno.getContentAnalysis(card.content)
-                                - 100 * uno.getColorAnalysis(card.color)
+                                - 100 * uno.getColorAnalysis(card.cardColor)
                                 - i;
                         candidates.put(score, card);
                         break; // default
@@ -1174,13 +1174,13 @@ public class AI {
                     || (hand.get(1 - i7).content != NUM7
                     && hand.get(1 - i7).content != WILD
                     && hand.get(1 - i7).content != WILD_DRAW4
-                    && hand.get(1 - i7).color != hand.get(i7).color)))
+                    && hand.get(1 - i7).cardColor != hand.get(i7).cardColor)))
                 iBest = i7;
             if (iBest < 0 && i0 >= 0 && (yourSize > 2
                     || (hand.get(1 - i0).content != NUM0
                     && hand.get(1 - i0).content != WILD
                     && hand.get(1 - i0).content != WILD_DRAW4
-                    && hand.get(1 - i0).color != hand.get(i0).color)))
+                    && hand.get(1 - i0).cardColor != hand.get(i0).cardColor)))
                 iBest = i0;
             if (iBest < 0 && iDW >= 0)
                 iBest = iDW;
@@ -1190,13 +1190,13 @@ public class AI {
                 iBest = iRV;
             if (iBest < 0 && iWD4 >= 0 && matches == 0)
                 iBest = iWD4;
-            if (iBest < 0 && iWD >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            if (iBest < 0 && iWD4 >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
             if (iBest < 0) for (int can : candidates.keySet()) {
                 i = -can % 100;
-                if (hand.get(i).color != nextStrong) {
+                if (hand.get(i).cardColor != nextStrong) {
                     iBest = i;
                     break;
                 } // if (hand.get(i).color != nextStrong)
@@ -1213,18 +1213,18 @@ public class AI {
                 iBest = i7;
             if (iBest < 0) for (int can : candidates.keySet()) {
                 i = -can % 100;
-                if (hand.get(i).color != prevStrong) {
+                if (hand.get(i).cardColor != prevStrong) {
                     iBest = i;
                     break;
                 } // if (hand.get(i).color != prevStrong)
             } // if (iBest < 0) for (int can : candidates.keySet())
-            if (iBest < 0 && iSK >= 0 && hand.get(iSK).color != prevStrong)
+            if (iBest < 0 && iSK >= 0 && hand.get(iSK).cardColor != prevStrong)
                 iBest = iSK;
-            if (iBest < 0 && iDW >= 0 && hand.get(iDW).color != prevStrong)
+            if (iBest < 0 && iDW >= 0 && hand.get(iDW).cardColor != prevStrong)
                 iBest = iDW;
-            if (iBest < 0 && iWD >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            if (iBest < 0 && iWD4 >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
             if (iBest < 0 && !candidates.isEmpty())
                 iBest = -candidates.firstKey() % 100;
@@ -1238,32 +1238,32 @@ public class AI {
                 iBest = i0;
             if (iBest < 0) for (int can : candidates.keySet()) {
                 i = -can % 100;
-                if (hand.get(i).color != oppoStrong) {
+                if (hand.get(i).cardColor != oppoStrong) {
                     iBest = i;
                     break;
                 } // if (hand.get(i).color != oppoStrong)
             } // if (iBest < 0) for (int can : candidates.keySet())
             if (iBest < 0 && iRV >= 0 && prevSize > nextSize)
                 iBest = iRV;
-            if (iBest < 0 && iSK >= 0 && hand.get(iSK).color != oppoStrong)
+            if (iBest < 0 && iSK >= 0 && hand.get(iSK).cardColor != oppoStrong)
                 iBest = iSK;
-            if (iBest < 0 && iDW >= 0 && hand.get(iDW).color != oppoStrong)
+            if (iBest < 0 && iDW >= 0 && hand.get(iDW).cardColor != oppoStrong)
                 iBest = iDW;
-            if (iBest < 0 && iWD >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD;
-            if (iBest < 0 && iWD4 >= 0 && lastColor != bestColor)
+            if (iBest < 0 && iWD4 >= 0 && lastCardColor != bestCardColor)
                 iBest = iWD4;
             if (iBest < 0 && !candidates.isEmpty())
                 iBest = -candidates.firstKey() % 100;
         } // else if (oppoSize == 1)
         else {
             // Normal strategies
-            if (i0 >= 0 && hand.get(i0).color == prevStrong)
+            if (i0 >= 0 && hand.get(i0).cardColor == prevStrong)
                 iBest = i0;
             if (iBest < 0 && i7 >= 0
-                    && (hand.get(i7).color == prevStrong
-                    || hand.get(i7).color == oppoStrong
-                    || hand.get(i7).color == nextStrong))
+                    && (hand.get(i7).cardColor == prevStrong
+                    || hand.get(i7).cardColor == oppoStrong
+                    || hand.get(i7).cardColor == nextStrong))
                 iBest = i7;
             if (iBest < 0 && iRV >= 0 && (prevSize > nextSize
                     || prev.getRecent() == null))
@@ -1284,13 +1284,13 @@ public class AI {
                     || (hand.get(1 - i0).content != NUM0
                     && hand.get(1 - i0).content != WILD
                     && hand.get(1 - i0).content != WILD_DRAW4
-                    && hand.get(1 - i0).color != hand.get(i0).color)))
+                    && hand.get(1 - i0).cardColor != hand.get(i0).cardColor)))
                 iBest = i0;
             if (iBest < 0 && i7 >= 0)
                 iBest = i7;
         } // else
 
-        outColor[0] = bestColor;
+        outCardColor[0] = bestCardColor;
         return iBest;
     } // sevenZeroAI_bestCardIndex4NowPlayer(Color[])
 } // AI Class

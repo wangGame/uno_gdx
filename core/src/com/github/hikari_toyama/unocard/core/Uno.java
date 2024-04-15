@@ -9,7 +9,7 @@
 
 package com.github.hikari_toyama.unocard.core;
 
-import static com.github.hikari_toyama.unocard.core.Color.NONE;
+import static com.github.hikari_toyama.unocard.core.CardColor.NONE;
 import static com.github.hikari_toyama.unocard.core.Content.DRAW2;
 import static com.github.hikari_toyama.unocard.core.Content.REV;
 import static com.github.hikari_toyama.unocard.core.Content.WILD;
@@ -503,7 +503,7 @@ public class Uno {
             table[i] = new Card(
                     /* image   */ br[i],
                     /* darkImg */ dk[i],
-                    /* color   */ Color.values()[i < 52 ? i / 13 + 1 : 0],
+                    /* color   */ CardColor.values()[i < 52 ? i / 13 + 1 : 0],
                     /* content */ Content.values()[i < 52 ? i % 13 : i - 39]
             ); // new Card(Image, Image, Color, Content)
         } // for (i = 0; i < 54; ++i)
@@ -519,7 +519,7 @@ public class Uno {
         direction = draw2StackCount = 0;
         replayDir = c.getExternalFilesDir("replay");
         _2vs2 = sevenZeroRule = draw2StackRule = false;
-        colorAnalysis = new int[Color.values().length];
+        colorAnalysis = new int[CardColor.values().length];
         contentAnalysis = new int[Content.values().length];
         player = new Player[]{
                 new Player(), // YOU
@@ -629,11 +629,11 @@ public class Uno {
      * get the corresponding color-filled image here, and show it in recent
      * card area.
      *
-     * @param color The wild image with which color filled you want to get.
+     * @param cardColor The wild image with which color filled you want to get.
      * @return Corresponding color-filled image.
      */
-    public Image getColoredWildImage(Color color) {
-        return wImage[color.ordinal()];
+    public Image getColoredWildImage(CardColor cardColor) {
+        return wImage[cardColor.ordinal()];
     } // getColoredWildImage(Color)
 
     /**
@@ -641,11 +641,11 @@ public class Uno {
      * color, get the corresponding color-filled image here, and show it in
      * recent card area.
      *
-     * @param color The wild +4 image with which color filled you want to get.
+     * @param cardColor The wild +4 image with which color filled you want to get.
      * @return Corresponding color-filled image.
      */
-    public Image getColoredWildDraw4Image(Color color) {
-        return w4Image[color.ordinal()];
+    public Image getColoredWildDraw4Image(CardColor cardColor) {
+        return w4Image[cardColor.ordinal()];
     } // getColoredWildDraw4Image(Color)
 
     /**
@@ -738,11 +738,11 @@ public class Uno {
      * @deprecated Call putText(m, text, x, y) instead.
      */
     @Deprecated
-    public void putText(Image m, String text, int x, int y, Color color) {
-        if (color == Color.RED) text = "[R]" + text;
-        if (color == Color.BLUE) text = "[B]" + text;
-        if (color == Color.GREEN) text = "[G]" + text;
-        if (color == Color.YELLOW) text = "[Y]" + text;
+    public void putText(Image m, String text, int x, int y, CardColor cardColor) {
+        if (cardColor == CardColor.RED) text = "[R]" + text;
+        if (cardColor == CardColor.BLUE) text = "[B]" + text;
+        if (cardColor == CardColor.GREEN) text = "[G]" + text;
+        if (cardColor == CardColor.YELLOW) text = "[Y]" + text;
         putText(m, text, x, y);
     } // putText(Image, String, int, int, Color)
 
@@ -1014,17 +1014,17 @@ public class Uno {
     /**
      * Find a card instance in card table.
      *
-     * @param color   Color of the card you want to get.
+     * @param cardColor   Color of the card you want to get.
      * @param content Content of the card you want to get.
      * @return Corresponding card instance.
      */
-    public Card findCard(Color color, Content content) {
-        return color == NONE && content == WILD
+    public Card findCard(CardColor cardColor, Content content) {
+        return cardColor == NONE && content == WILD
                 ? table[39 + WILD.ordinal()]
-                : color == NONE && content == WILD_DRAW4
+                : cardColor == NONE && content == WILD_DRAW4
                 ? table[39 + WILD_DRAW4.ordinal()]
-                : color != NONE && content != WILD && content != WILD_DRAW4
-                ? table[13 * (color.ordinal() - 1) + content.ordinal()]
+                : cardColor != NONE && content != WILD && content != WILD_DRAW4
+                ? table[13 * (cardColor.ordinal() - 1) + content.ordinal()]
                 : null;
     } // findCard(Color, Content)
 
@@ -1080,12 +1080,12 @@ public class Uno {
      * @deprecated Call getRecentInfo() instead.
      */
     @Deprecated
-    public List<Color> getRecentColors() {
-        List<Color> ret = new ArrayList<>();
+    public List<CardColor> getRecentColors() {
+        List<CardColor> ret = new ArrayList<>();
 
         for (int i = 0; i < 4; ++i) {
             if (recent[i].card != null) {
-                ret.add(recent[i].color);
+                ret.add(recent[i].cardColor);
             } // if (recent[i].card != null)
         } // for (int i = 0; i < 4; ++i)
 
@@ -1101,7 +1101,7 @@ public class Uno {
     public RecentInfo[] getRecentInfo() {
         for (int i = 0; i < 4; ++i) {
             constRecent[i].card = recent[i].card;
-            constRecent[i].color = recent[i].color;
+            constRecent[i].cardColor = recent[i].cardColor;
         } // for (int i = 0; i < 4; ++i)
 
         return constRecent;
@@ -1110,15 +1110,15 @@ public class Uno {
     /**
      * @return Color of the last played card.
      */
-    public Color lastColor() {
-        return recent[3].color;
+    public CardColor lastColor() {
+        return recent[3].cardColor;
     } // lastColor()
 
     /**
      * @return Color of the next-to-last played card.
      */
-    public Color next2lastColor() {
-        return recent[2].color;
+    public CardColor next2lastColor() {
+        return recent[2].cardColor;
     } // next2lastColor()
 
     /**
@@ -1127,7 +1127,7 @@ public class Uno {
      * @param A Provide the parameter A.
      * @return Value of colorAnalysis[A].
      */
-    public int getColorAnalysis(Color A) {
+    public int getColorAnalysis(CardColor A) {
         return colorAnalysis[A.ordinal()];
     } // getColorAnalysis(Color)
 
@@ -1165,11 +1165,11 @@ public class Uno {
         used.clear();
         for (i = 0; i < 4; ++i) {
             recent[i].card = null;
-            recent[i].color = NONE;
+            recent[i].cardColor = NONE;
             player[i].open = 0x00;
             player[i].handCards.clear();
-            player[i].weakColor = NONE;
-            player[i].strongColor = NONE;
+            player[i].weakCardColor = NONE;
+            player[i].strongCardColor = NONE;
         } // for (i = 0; i < 4; ++i)
 
         // Generate a temporary sequenced card deck
@@ -1207,9 +1207,9 @@ public class Uno {
                 // Any non-wild card can be start card
                 // Start card determined
                 recent[3].card = card;
-                ++colorAnalysis[card.color.ordinal()];
+                ++colorAnalysis[card.cardColor.ordinal()];
                 ++contentAnalysis[card.content.ordinal()];
-                recent[3].color = card.color;
+                recent[3].cardColor = card.cardColor;
             } // else
         } while (recent[3].card == null);
 
@@ -1262,10 +1262,10 @@ public class Uno {
             } // if (draw2StackCount > 0)
             else if (!force) {
                 // Draw a card by player itself, register weak color
-                player[who].weakColor = lastColor();
-                if (player[who].weakColor == player[who].strongColor) {
+                player[who].weakCardColor = lastColor();
+                if (player[who].weakCardColor == player[who].strongCardColor) {
                     // Weak color cannot also be strong color
-                    player[who].strongColor = NONE;
+                    player[who].strongCardColor = NONE;
                 } // if (player[who].weakColor == player[who].strongColor)
             } // else if (!force)
 
@@ -1293,7 +1293,7 @@ public class Uno {
                     Log.i(TAG, "Re-use the used cards");
                     for (j = used.size(); --j >= 0; ) {
                         --contentAnalysis[used.get(j).content.ordinal()];
-                        --colorAnalysis[used.get(j).color.ordinal()];
+                        --colorAnalysis[used.get(j).cardColor.ordinal()];
                         deck.add(used.get(j));
                         used.remove(j);
                     } // for (j = used.size(); --j >= 0; )
@@ -1364,11 +1364,11 @@ public class Uno {
      *              Player.YOU, Player.COM1, Player.COM2, Player.COM3.
      * @param index Play which card. Pass the corresponding card's index of the
      *              specified player's hand cards.
-     * @param color Optional, available when the card to play is a wild card.
+     * @param cardColor Optional, available when the card to play is a wild card.
      *              Pass the specified following legal color.
      * @return Reference of the played card.
      */
-    public Card play(int who, int index, Color color) {
+    public Card play(int who, int index, CardColor cardColor) {
         int i, size;
         Card card = null;
 
@@ -1378,11 +1378,11 @@ public class Uno {
             size = hand.size();
             if (index < size) {
                 if ((card = hand.get(index)).isWild()) {
-                    String name = Card.A[color.ordinal()] + card.name;
+                    String name = Card.A[cardColor.ordinal()] + card.name;
                     Log.i(TAG, "Player " + who + " played " + name);
                 } // if ((card = hand.get(index)).isWild())
                 else {
-                    color = card.color;
+                    cardColor = card.cardColor;
                     Log.i(TAG, "Player " + who + " played " + card.name);
                 } // else
 
@@ -1390,19 +1390,19 @@ public class Uno {
                 if (card.isWild()) {
                     // When a wild card is played, register the specified
                     // following legal color as the player's strong color
-                    player[who].strongColor = color;
+                    player[who].strongCardColor = cardColor;
                     player[who].strongCount = 1 + size / 3;
-                    if (color == player[who].weakColor) {
+                    if (cardColor == player[who].weakCardColor) {
                         // Strong color cannot also be weak color
-                        player[who].weakColor = NONE;
+                        player[who].weakCardColor = NONE;
                     } // if (color == player[who].weakColor)
                 } // if (card.isWild())
-                else if (card.color == player[who].strongColor) {
+                else if (card.cardColor == player[who].strongCardColor) {
                     // Played a card that Imageches the registered
                     // strong color, strong counter counts down
                     --player[who].strongCount;
                     if (player[who].strongCount == 0) {
-                        player[who].strongColor = NONE;
+                        player[who].strongCardColor = NONE;
                     } // if (player[who].strongCount == 0)
                 } // else if (card.color == player[who].strongColor)
                 else if (player[who].strongCount >= size) {
@@ -1422,7 +1422,7 @@ public class Uno {
                 for (i = 0; i < 4; ++i) {
                     if (i > 0) {
                         recent[i - 1].card = recent[i].card;
-                        recent[i - 1].color = recent[i].color;
+                        recent[i - 1].cardColor = recent[i].cardColor;
                     } // if (i > 0)
                     else if (recent[i].card != null) {
                         used.add(recent[i].card);
@@ -1430,15 +1430,15 @@ public class Uno {
                 } // for (i = 0; i < 4; ++i)
 
                 recent[3].card = card;
-                recent[3].color = color;
-                ++colorAnalysis[card.color.ordinal()];
+                recent[3].cardColor = cardColor;
+                ++colorAnalysis[card.cardColor.ordinal()];
                 ++contentAnalysis[card.content.ordinal()];
                 Log.i(TAG, "colorAnalysis & contentAnalysis:");
                 Log.i(TAG, Arrays.toString(colorAnalysis));
                 Log.i(TAG, Arrays.toString(contentAnalysis));
                 replay.append(";PL,").append(who);
                 replay.append(",").append(card.id);
-                replay.append(",").append(color.ordinal());
+                replay.append(",").append(cardColor.ordinal());
 
                 // Update the legality binary
                 legality = draw2StackCount > 0
@@ -1483,7 +1483,7 @@ public class Uno {
             } // if (whom != Player.YOU)
 
             for (Card card : player[whom].handCards) {
-                if (card.color == next2lastColor()) {
+                if (card.cardColor == next2lastColor()) {
                     result = true;
                     break;
                 } // if (card.color == next2lastColor())
@@ -1719,15 +1719,15 @@ public class Uno {
                 used.clear();
                 for (i = 0; i < 4; ++i) {
                     recent[i].card = null;
-                    recent[i].color = NONE;
+                    recent[i].cardColor = NONE;
                     player[i].open = 0x00;
                     player[i].handCards.clear();
-                    player[i].weakColor = NONE;
-                    player[i].strongColor = NONE;
+                    player[i].weakCardColor = NONE;
+                    player[i].strongCardColor = NONE;
                 } // for (i = 0; i < 4; ++i)
 
                 recent[3].card = card;
-                recent[3].color = card.color;
+                recent[3].cardColor = card.cardColor;
                 direction = card.content == REV ? DIR_RIGHT : DIR_LEFT;
             } // if ((s = x[0]).equals("ST"))
             else if (s.equals("DR")) {
@@ -1758,11 +1758,11 @@ public class Uno {
                     player[a].open = player[a].open >> 1;
                     for (i = 1; i < 4; ++i) {
                         recent[i - 1].card = recent[i].card;
-                        recent[i - 1].color = recent[i].color;
+                        recent[i - 1].cardColor = recent[i].cardColor;
                     } // for (i = 1; i < 4; ++i)
 
                     recent[3].card = card;
-                    recent[3].color = Color.values()[c];
+                    recent[3].cardColor = CardColor.values()[c];
                 } // if (i >= 0)
 
                 now = a;
@@ -1809,7 +1809,7 @@ public class Uno {
      */
     public static class RecentInfo {
         public Card card = null;
-        public Color color = NONE;
+        public CardColor cardColor = NONE;
     } // RecentInfo Inner Class
 } // Uno Class
 
