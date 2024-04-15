@@ -1,0 +1,100 @@
+apply plugin: "com.android.application"
+android {
+    buildToolsVersion "30.0.3"
+    compileSdkVersion 33
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['../Asset']
+        }
+    }
+    defaultConfig {
+        applicationId "kw.test.game"
+        minSdkVersion 14
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0.0"
+        multiDexEnabled true
+        ndk{
+            abiFilters "armeabi","armeabi-v7a","arm64-v8a"
+        }
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            // 显示Log
+            minifyEnabled false //开启混淆
+            shrinkResources false //删除无用资源
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+            proguardFile 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+    }
+
+}
+
+task run(type: Exec) {
+    def path
+    def localProperties = project.file("../local.properties")
+    if (localProperties.exists()) {
+        Properties properties = new Properties()
+        localProperties.withInputStream { instr ->
+            properties.load(instr)
+        }
+        def sdkDir = properties.getProperty('sdk.dir')
+        if (sdkDir) {
+            path = sdkDir
+        } else {
+            path = "$System.env.ANDROID_HOME"
+        }
+    } else {
+        path = "$System.env.ANDROID_HOME"
+    }
+
+    def adb = path + "/platform-tools/adb"
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.tony.puzzle/com.tony.puzzle.AndroidLauncher'
+}
+
+repositories{
+    maven { url 'https://jitpack.io' }
+    jcenter()
+    mavenCentral()
+    maven { url 'https://maven.aliyun.com/repository/central' }
+    maven { url 'https://maven.aliyun.com/repository/jcenter' }
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    mavenLocal()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation project(":core")
+    // libGdx源码
+//    implementation 'com.github.wangGame.LibGdxTool:libGdx:release1.0.1'
+    //自己的工具包
+//    implementation 'com.github.wangGame.LibGdxTool:libGdxLib:release1.0.1'
+    implementation files('libs\\libGdx-1.0.jar')
+    implementation files('libs\\libGdxLib-1.0.jar')
+}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "823356162405",
+    "project_id": "art-jigsaw-puzzle",
+    "storage_bucket": "art-jigsaw-puzzle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823356162405:android:59bdc21d13b153e356618c",
+        "android_client_info": {
+          "package_name": "com.tony.puzzle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823356162405-t4k5b5i4una967rkg8f93rvsq6hc5irv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlBDzGLCxMnGcx363LJdupwu7fFtzM8d4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823356162405-t4k5b5i4una967rkg8f93rvsq6hc5irv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

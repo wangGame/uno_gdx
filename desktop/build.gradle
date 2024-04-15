@@ -1,0 +1,42 @@
+apply plugin: "java"
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+project.ext.mainClassName = "kw.test.desktop.DesktopLauncher"
+project.ext.assetsDir = new File("assets");
+project.ext.assetsDir = new File("../Asset");
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
+}
+
+task dist(type: Jar) {
+    from files(sourceSets.main.output.classesDirs)
+    from files(sourceSets.main.output.resourcesDir)
+    from {configurations.compile.collect {zipTree(it)}}
+    from files(project.assetsDir);
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
+}
+
+dependencies {
+//    implementation 'com.github.wangGame.LibGdxTool:libGdxLib:release1.0.3'
+//    implementation 'com.github.wangGame.LibGdxTool:libGdx:release1.0.3'
+    implementation 'com.github.wangGame.LibGdxTool:desktop:release1.0.3'
+
+    implementation files('libs/gdx-backend-lwjgl.jar')
+    implementation files('libs/gdx-backend-lwjgl-natives.jar')
+    implementation files('libs/gdx-natives.jar')
+    implementation files('libs/gdx-tools.jar')
+    implementation files('libs\\libGdx-1.0.jar')
+    implementation files('libs\\libGdxLib-1.0.jar')
+//    implementation files('libs\\libGdx-1.0-sources.jar')
+//    implementation files('libs\\libGdxLib-1.0-sources.jar')
+
+    compile project(':core')
+}

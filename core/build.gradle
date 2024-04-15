@@ -1,0 +1,19 @@
+apply plugin: "java"
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [
+        "src/"
+]
+
+dependencies{
+    // libGdx源码
+//    implementation 'com.github.wangGame.LibGdxTool:libGdx:release1.0.1'
+//    //自己的工具包
+//    implementation 'com.github.wangGame.LibGdxTool:libGdxLib:release1.0.1'
+    implementation files('libs\\libGdx-1.0.jar')
+    implementation files('libs\\libGdxLib-1.0.jar')
+    implementation project(":net")
+//    implementation files('libs\\libGdx-1.0-sources.jar')
+//    implementation files('libs\\libGdxLib-1.0-sources.jar')
+}
