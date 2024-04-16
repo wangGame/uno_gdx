@@ -13,7 +13,7 @@ dependencies{
 //    implementation 'com.github.wangGame.LibGdxTool:libGdxLib:release1.0.1'
     implementation files('libs\\libGdx-1.0.jar')
     implementation files('libs\\libGdxLib-1.0.jar')
-    implementation project(":net")
+
 //    implementation files('libs\\libGdx-1.0-sources.jar')
 //    implementation files('libs\\libGdxLib-1.0-sources.jar')
 }
