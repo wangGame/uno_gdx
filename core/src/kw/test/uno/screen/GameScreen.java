@@ -11,6 +11,7 @@ import com.kw.gdx.screen.BaseScreen;
 
 public class GameScreen extends BaseScreen {
     private int playerNum = 7;
+    private int initCardNum = 5;
     private Array<Group> userGroups;
     public GameScreen(BaseGame game) {
         super(game);
@@ -36,6 +37,15 @@ public class GameScreen extends BaseScreen {
                     Align.center);
         }
 
+        sendCard();
 
+    }
+
+    private void sendCard() {
+        for (int i = 0; i < initCardNum; i++) {
+            for (Group userGroup : userGroups) {
+
+            }
+        }
     }
 }
