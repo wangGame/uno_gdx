@@ -18,6 +18,8 @@ public abstract class Aplayer {
         cards.removeIndex(index);
     }
 
+    public abstract void decision();
+
     @Override
     public String toString() {
         return "Aplayer{" +
