@@ -3,8 +3,7 @@ package kw.test.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.libGdx.test.base.LibGdxTestMain;;
-
-import kw.test.pool.UnoGame;
+import kw.test.uno.UnoGame;
 
 public class DesktopLauncher extends LibGdxTestMain {
     public void start(LibGdxTestMain test) {

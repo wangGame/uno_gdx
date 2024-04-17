@@ -71,4 +71,45 @@ public class Uno {
     public boolean isLegalToPlay(Card card) {
         return false;
     }
+
+    public boolean isSevenZeroRule() {
+        return false;
+    }
+
+    public int getDifficulty() {
+        return 0;
+    }
+
+    public int getNow() {
+        return 0;
+    }
+
+    public Card play(int now, int index, CardColorEnum cardColorEnum) {
+        return null;
+    }
+
+    public Player getPlayer(int com1) {
+        return null;
+    }
+
+    public int switchNow() {
+        return 0;
+    }
+
+    public boolean isDraw2StackRule() {
+        return false;
+    }
+
+    public int getDraw2StackCount() {
+        return 0;
+    }
+
+    public void switchDirection() {
+
+
+    }
+
+    public void start() {
+
+    }
 }
