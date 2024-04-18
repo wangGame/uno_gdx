@@ -1,34 +1,31 @@
-package kw.test.uno.data;
+package kw.test.uno.bean;
 
-public class Card {
+import kw.test.uno.data.CardColor;
+import kw.test.uno.data.CardValue;
+
+public class RecentBean {
     private CardColor cardColor;
     private CardValue cardValue;
 
-    public Card(CardValue cardValue,CardColor cardColor) {
-        this.cardColor = cardColor;
-        this.cardValue = cardValue;
+    public CardColor getCardColor() {
+        return cardColor;
     }
 
     public void setCardColor(CardColor cardColor) {
         this.cardColor = cardColor;
     }
 
-    public void setCardValue(CardValue cardValue) {
-        this.cardValue = cardValue;
-    }
-
-    public CardColor getCardColor() {
-        return cardColor;
-    }
-
     public CardValue getCardValue() {
         return cardValue;
     }
 
+    public void setCardValue(CardValue cardValue) {
+        this.cardValue = cardValue;
+    }
 
     @Override
     public String toString() {
-        return "Card{" +
+        return "RecentBean{" +
                 "cardColor=" + cardColor +
                 ", cardValue=" + cardValue +
                 '}';

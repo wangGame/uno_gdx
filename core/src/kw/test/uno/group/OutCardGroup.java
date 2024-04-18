@@ -1,16 +1,18 @@
 package kw.test.uno.group;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.github.hikari_toyama.unocard.core.Card;
 import com.kw.gdx.asset.Asset;
 
+import kw.test.uno.data.Card;
 import kw.test.uno.data.UnoCardData;
 
 public class OutCardGroup extends Group {
-    private Array<CardGroup> cards = new Array<>();
+    private Array<Card> cards = new Array<>();
     public OutCardGroup(){
         setDebug(true);
         Image image = new Image(Asset.getAsset().getTexture("dark_b1.png"));
@@ -19,12 +21,21 @@ public class OutCardGroup extends Group {
         image.setPosition(getWidth()/2.0f,getHeight()/2.0f, Align.center);
     }
 
-    public void outCard(CardGroup cardGroup){
-        cards.add(cardGroup);
+    public void outCard(Card card, Vector2 vector2, int i){
+        cards.add(card);
+        CardGroup cardGroup = new CardGroup(card);
+        addActor(cardGroup);
+        stageToLocalCoordinates(vector2);
+        cardGroup.setDebug(true);
+        cardGroup.setPosition(vector2.x,vector2.y,Align.center);
+        cardGroup.addAction(Actions.sequence(
+                Actions.delay(i),
+                Actions.moveTo(0,0,0.2f)
+        ));
     }
 
-    public Array<CardGroup> clearAllCardGroup(){
-        Array<CardGroup> cardGroups = new Array<>(cards);
+    public Array<Card> clearAllCardGroup(){
+        Array<Card> cardGroups = new Array<>(cards);
         cards.clear();
         return cardGroups;
     }

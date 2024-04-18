@@ -84,4 +84,5 @@ public class Constant {
         } // for (int i = 0; i < hanZi.length; ++i)
     } // static
 
+
 }

@@ -43,7 +43,7 @@ public class CardGroup extends Group {
         System.out.println(str);
         cardImg = new Image(Asset.getAsset().getTexture(str));
         addActor(cardImg);
-
+        setSize(cardImg.getWidth(),cardImg.getHeight());
     }
 
     public Card getCard() {

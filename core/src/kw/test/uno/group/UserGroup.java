@@ -18,12 +18,14 @@ import java.util.Comparator;
 
 import kw.test.uno.data.Card;
 import kw.test.uno.player.Aplayer;
+import kw.test.uno.sign.SignListener;
 
 public class UserGroup extends Group {
     private Aplayer aplayer;
     private ArrayMap<Card,CardGroup> cardGroupMaps;
     private Array<CardGroup> cardGroups;
     private Group cardPanel;
+
     public UserGroup(Aplayer aplayer){
         setSize(280,180);
         this.aplayer = aplayer;
@@ -35,7 +37,7 @@ public class UserGroup extends Group {
         addActor(cardPanel);
     }
 
-    public void addCard(Array<Card> cards, Vector2 vector2, float time){
+    public void addCard(Array<Card> cards, Vector2 vector2, float time, SignListener signListener){
         for (Card card : cards) {
             stageToLocalCoordinates(vector2);
             CardGroup cardGroup = new CardGroup(card);
@@ -60,6 +62,12 @@ public class UserGroup extends Group {
                     super.exit(event, x, y, pointer, toActor);
                     cardGroup.setY(yyy);
                 }
+
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    signListener.sign(card);
+                }
             });
             cardGroup.addAction(Actions.sequence(
                     Actions.delay(time),
@@ -70,7 +78,6 @@ public class UserGroup extends Group {
                     })
             ));
         }
-
     }
 
     public void layoutCard(){
@@ -100,4 +107,10 @@ public class UserGroup extends Group {
             }
         }
     };
+
+    public CardGroup sendCard(Card card){
+        CardGroup cardGroup = cardGroupMaps.get(card);
+        aplayer.sendCard(card); //删除数据
+        return cardGroup;
+    }
 }

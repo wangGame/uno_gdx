@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import kw.test.uno.data.CardColor;
+
 public class Player {
     private List<Card> handCards;
     private List<Card> constHandCards;
@@ -12,6 +14,7 @@ public class Player {
     private Card recent;
     private int strongCount;
     private int open;
+
     public Player(){
         this.handCards = new ArrayList<>();
         this.constHandCards = Collections.unmodifiableList(handCards);
