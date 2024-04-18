@@ -74,7 +74,9 @@ public class UnoCardData {
     public Array<Card> sendCard(int num){
         Array<Card> cards = new Array<>();
         if (deskCard.size>num) {
-            cards.add(deskCard.removeIndex(0));
+            for (int i = 0; i < num; i++) {
+                cards.add(deskCard.removeIndex(0));
+            }
         }
         return cards;
     }

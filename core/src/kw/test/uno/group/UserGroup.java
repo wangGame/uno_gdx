@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
@@ -49,6 +50,11 @@ public class UserGroup extends Group {
                 unoImg.setVisible(false);
             }
         });
+    }
+
+    @Override
+    public void setTouchable(Touchable touchable) {
+        cardPanel.setTouchable(touchable);
     }
 
     public void addCard(Array<Card> cards, Vector2 vector2, float time, SignListener signListener){
