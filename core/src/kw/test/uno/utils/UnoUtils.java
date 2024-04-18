@@ -7,6 +7,7 @@ import com.github.hikari_toyama.unocard.core.Uno;
 import kw.test.uno.bean.RecentBean;
 import kw.test.uno.contant.UnoConfig;
 import kw.test.uno.data.Card;
+import kw.test.uno.data.CardColor;
 import kw.test.uno.group.UserGroup;
 import kw.test.uno.player.Aplayer;
 
@@ -51,5 +52,30 @@ public class UnoUtils {
             userIndex = (--userIndex) % aplayers.size;
         }
         return aplayers.get(userIndex);
+    }
+
+    public String dirDirName(RecentBean recentBean){
+        if (UnoConfig.DIR == UnoConfig.DIR_LEFT){
+            if (recentBean.getCardColor() == CardColor.BLUE){
+                return "refresh_icon_blue_anticlock.png";
+            }else if (recentBean.getCardColor() == CardColor.GREEN){
+                return "refresh_icon_green_anticlock.png";
+            }else if (recentBean.getCardColor() == CardColor.RED){
+                return "refresh_icon_red_anticlock.png";
+            }else if (recentBean.getCardColor() == CardColor.YELLOW){
+                return "refresh_icon_yellow_anticlock.png";
+            }
+        }else {
+            if (recentBean.getCardColor() == CardColor.BLUE){
+                return "refresh_icon_blue.png";
+            }else if (recentBean.getCardColor() == CardColor.GREEN){
+                return "refresh_icon_green.png";
+            }else if (recentBean.getCardColor() == CardColor.RED){
+                return "refresh_icon_red.png";
+            }else if (recentBean.getCardColor() == CardColor.BLUE){
+                return "refresh_icon_yellow.png";
+            }
+        }
+        return "refresh_icon_wild_anticlock.png";
     }
 }

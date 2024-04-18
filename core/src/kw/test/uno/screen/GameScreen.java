@@ -2,11 +2,12 @@ package kw.test.uno.screen;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kw.gdx.BaseGame;
+import com.kw.gdx.asset.Asset;
 import com.kw.gdx.constant.Constant;
 import com.kw.gdx.listener.OrdinaryButtonListener;
 import com.kw.gdx.screen.BaseScreen;
@@ -15,6 +16,7 @@ import com.kw.gdx.utils.log.NLog;
 import kw.test.uno.bean.RecentBean;
 import kw.test.uno.contant.UnoConfig;
 import kw.test.uno.data.Card;
+import kw.test.uno.data.CardColor;
 import kw.test.uno.data.UnoCardData;
 import kw.test.uno.dialog.SelectColorDialog;
 import kw.test.uno.group.CardGroup;
@@ -28,7 +30,7 @@ import kw.test.uno.sign.SignListener;
 import kw.test.uno.utils.UnoUtils;
 
 public class GameScreen extends BaseScreen {
-    private int playerNum = 5;
+    private int playerNum = 10;
     private int initCardNum = 5;
     private Array<UserGroup> userGroups;
     private OutCardGroup outCardGroup;
@@ -36,6 +38,7 @@ public class GameScreen extends BaseScreen {
     private Vector2 deskCardV2;
     private RecentBean recentBean;
     private UnoUtils utils;
+    private Image dirImg;
 
     public GameScreen(BaseGame game) {
         super(game);
@@ -51,11 +54,21 @@ public class GameScreen extends BaseScreen {
     @Override
     public void initView() {
         super.initView();
+        initBg();
         initDeskCard();
         initPlayerPanel();
         sendCard();
         layoutCard();
         startGame();
+    }
+
+    private void initBg() {
+        Image bg = new Image(Asset.getAsset().getTexture("bg_welcome.png"));
+        rootView.addActor(bg);
+        float bgScale = Math.max(Constant.GAMEHIGHT/1600.0f,Constant.GAMEHIGHT/900.0f); //1600 900
+        bg.setOrigin(Align.center);
+        bg.setScale(bgScale);
+        bg.setPosition(960.0f,540.0f,Align.center);
     }
 
     private void startGame() {
@@ -67,6 +80,31 @@ public class GameScreen extends BaseScreen {
         recentBean.setCardValue(card.getCardValue());
         //当前用户
         utils.currentPlayer();
+        stage.addAction(Actions.sequence(
+                Actions.delay(3,Actions.run(()->{
+                    updateDirImg();
+                }))
+        ));
+    }
+
+    public void updateDirImg(){
+        if (dirImg!=null){
+            dirImg.clear();
+            dirImg.remove();
+        }
+        this.dirImg = new Image(Asset.getAsset().getTexture("dirimg/"+utils.dirDirName(recentBean)));
+        rootView.addActor(dirImg);
+        dirImg.setPosition(Constant.WIDTH/2.0f,Constant.HIGHT/2.0f,Align.center);
+        dirImg.setOrigin(Align.center);
+        if (UnoConfig.DIR == UnoConfig.DIR_LEFT){
+            dirImg.addAction(Actions.forever(
+                    Actions.rotateBy(10,0.1f)
+            ));
+        }else {
+            dirImg.addAction(Actions.forever(
+                    Actions.rotateBy(-10,0.1f)
+            ));
+        }
     }
 
 
@@ -85,7 +123,13 @@ public class GameScreen extends BaseScreen {
                 UserGroup userGroup = utils.currentPlayer();
                 Array<Card> cards = deskCardGroup.sendCard(1);
                 createCard(0,userGroup,cards);
-                utils.nextPlayer();
+                Card card = cards.get(0);
+                //揭牌刚好可以打出
+                if (utils.isLegalToPlay(recentBean,card)) {
+                    sendCard(card);
+                }else {
+                    utils.nextPlayer();
+                }
             }
         });
     }
@@ -102,7 +146,6 @@ public class GameScreen extends BaseScreen {
             UserGroup userGroup = new UserGroup(aplayer);
             userGroups.add(userGroup);
             rootView.addActor(userGroup);
-            userGroup.setDebug(true);
             userGroup.setPosition(
                     (float) (Constant.WIDTH/2.0f+(Constant.WIDTH-100)/2.0f*Math.cos(Math.toRadians(i * (360.f/playerNum)))),
                     (float)(Constant.HIGHT/2.0f+(Constant.HIGHT-100)/2.0f*Math.sin(Math.toRadians(i * (360.f/playerNum)))),
@@ -143,46 +186,64 @@ public class GameScreen extends BaseScreen {
                 if (!utils.isLegalToPlay(recentBean,card)) {
                     return;
                 }
-                UserGroup userGroup = utils.currentPlayer();
-                CardGroup cardGroup = userGroup.sendCard(card);
-                Vector2 vector2 = new Vector2();
-                vector2.set(cardGroup.getX(),cardGroup.getY());
-                cardGroup.getParent().localToStageCoordinates(vector2);
-//                outCardGroup.stageToLocalCoordinates(vector2);
-//                cardGroup.setPosition(vector2.x,vector2.y,Align.center);
-//                cardGroup.addAction(Actions.moveTo(0,0,0.2f));
-//                outCardGroup.addActor(cardGroup);
-                cardGroup.remove();
-                outCardGroup.outCard(card,new Vector2(vector2),0);
-                userGroup.layoutCard();
-                recentBean.setCardValue(card.getCardValue());
-                recentBean.setCardColor(card.getCardColor());
-
-                //出牌逻辑
-                switch (card.getCardValue()){
-                    case DRAW2:
-                        Array<Card> cards = deskCardGroup.sendCard(2);
-                        UserGroup userGroupTemp = utils.nextTempPlayer();
-                        createCard(0,userGroupTemp,cards);
-                        utils.nextPlayer();
-                        break;
-                    case REV:
-                        UnoConfig.DIR =
-                                UnoConfig.DIR==UnoConfig.DIR_LEFT ?
-                                        UnoConfig.DIR_RIGHT:UnoConfig.DIR_LEFT;
-                        break;
-                    case SKIP:
-                        utils.nextPlayer();
-                        break;
-                    case WILD:
-                        showDialog(new SelectColorDialog(recentBean));
-                        break;
-                    case WILD_DRAW4:
-                        showDialog(new SelectColorDialog(recentBean));
-                        break;
-                }
-                utils.nextPlayer();
+                sendCard(card);
             }
         }
     };
+
+    private void sendCard(Card card) {
+        UserGroup userGroup = utils.currentPlayer();
+        CardGroup cardGroup = userGroup.sendOutCard(card);
+        Vector2 vector2 = new Vector2();
+        vector2.set(cardGroup.getX(),cardGroup.getY());
+        cardGroup.getParent().localToStageCoordinates(vector2);
+        cardGroup.remove();
+        outCardGroup.outCard(card,new Vector2(vector2),0);
+        userGroup.layoutCard();
+        CardColor oldCardColor = recentBean.getCardColor();
+        recentBean.setCardValue(card.getCardValue());
+        recentBean.setCardColor(card.getCardColor());
+        if (oldCardColor != recentBean.getCardColor()){
+            updateDirImg();
+        }
+        //出牌逻辑
+        switch (card.getCardValue()){
+            case DRAW2:
+                Array<Card> cards = deskCardGroup.sendCard(2);
+                UserGroup userGroupTemp = utils.nextTempPlayer();
+                createCard(0,userGroupTemp,cards);
+                utils.nextPlayer();
+                break;
+            case REV:
+                UnoConfig.DIR =
+                        UnoConfig.DIR==UnoConfig.DIR_LEFT ?
+                                UnoConfig.DIR_RIGHT:UnoConfig.DIR_LEFT;
+                break;
+            case SKIP:
+                utils.nextPlayer();
+                break;
+            case WILD:
+                showDialog(new SelectColorDialog(recentBean,new SignListener(){
+                    @Override
+                    public void sign(Object object) {
+                        super.sign(object);
+                        updateDirImg();
+                    }
+                }));
+                break;
+            case WILD_DRAW4:
+                showDialog(new SelectColorDialog(recentBean, new SignListener(){
+                    @Override
+                    public void sign(Object object) {
+                        super.sign(object);
+                        updateDirImg();
+                        Array<Card> cards1 = deskCardGroup.sendCard(4);
+                        createCard(0,utils.currentPlayer(),cards1);
+                        utils.nextPlayer();
+                    }
+                }));
+                break;
+        }
+        utils.nextPlayer();
+    }
 }

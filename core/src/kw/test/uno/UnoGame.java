@@ -1,5 +1,6 @@
 package kw.test.uno;
 
+import com.badlogic.gdx.Gdx;
 import com.kw.gdx.BaseGame;
 import com.kw.gdx.resource.annotation.GameInfo;
 
@@ -10,6 +11,7 @@ public class UnoGame extends BaseGame {
     @Override
     public void create() {
         super.create();
+        Gdx.isJiami = true;
         setScreen(new LoadingScreen(this));
     }
 }

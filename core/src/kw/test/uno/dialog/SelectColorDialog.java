@@ -9,12 +9,15 @@ import com.kw.gdx.view.dialog.base.BaseDialog;
 
 import kw.test.uno.bean.RecentBean;
 import kw.test.uno.data.CardColor;
+import kw.test.uno.sign.SignListener;
 
 @ScreenResource("cocos/SelectColorDialog.json")
 public class SelectColorDialog extends BaseDialog {
     private RecentBean recentBean;
-    public SelectColorDialog(RecentBean recentBean){
+    private SignListener signListener;
+    public SelectColorDialog(RecentBean recentBean, SignListener signListener){
         this.recentBean = recentBean;
+        this.signListener = signListener;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class SelectColorDialog extends BaseDialog {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 recentBean.setCardColor(CardColor.RED);
+                signListener.sign(null);
                 dialogManager.closeDialog(SelectColorDialog.this);
             }
         });
@@ -37,6 +41,7 @@ public class SelectColorDialog extends BaseDialog {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 recentBean.setCardColor(CardColor.BLUE);
+                signListener.sign(null);
                 dialogManager.closeDialog(SelectColorDialog.this);
             }
         });
@@ -47,6 +52,7 @@ public class SelectColorDialog extends BaseDialog {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 recentBean.setCardColor(CardColor.GREEN);
+                signListener.sign(null);
                 dialogManager.closeDialog(SelectColorDialog.this);
             }
         });
@@ -57,6 +63,7 @@ public class SelectColorDialog extends BaseDialog {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 recentBean.setCardColor(CardColor.YELLOW);
+                signListener.sign(null);
                 dialogManager.closeDialog(SelectColorDialog.this);
             }
         });

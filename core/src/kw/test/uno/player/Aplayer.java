@@ -26,8 +26,8 @@ public abstract class Aplayer {
         cards.add(card);
     }
 
-    public void outCard(int index){
-        cards.removeIndex(index);
+    public void outCard(Card card){
+        cards.removeValue(card,false);
     }
 
     public Array<Card> getCards() {

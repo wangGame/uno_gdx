@@ -25,6 +25,7 @@ public class UserGroup extends Group {
     private ArrayMap<Card,CardGroup> cardGroupMaps;
     private Array<CardGroup> cardGroups;
     private Group cardPanel;
+    private Image unoImg;
 
     public UserGroup(Aplayer aplayer){
         setSize(280,180);
@@ -35,6 +36,19 @@ public class UserGroup extends Group {
         cardPanel.setSize(getWidth(),getHeight());
         cardPanel.setPosition(getWidth()/2.0f,getHeight()/2.0f, Align.center);
         addActor(cardPanel);
+        this.unoImg = new Image(Asset.getAsset().getTexture("common/say_uno.png"));
+        addActor(unoImg);
+        unoImg.setOrigin(Align.center);
+        unoImg.setScale(0.5f);
+        unoImg.setPosition(getWidth()/2.0f,250,Align.center);
+        unoImg.setVisible(false);
+        unoImg.addListener(new OrdinaryButtonListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                unoImg.setVisible(false);
+            }
+        });
     }
 
     public void addCard(Array<Card> cards, Vector2 vector2, float time, SignListener signListener){
@@ -84,7 +98,6 @@ public class UserGroup extends Group {
         cardGroups.sort(Comparator);
         SnapshotArray<Actor> children = cardPanel.getChildren();
         children.sort(Comparator);
-        cardPanel.setDebug(true);
         float v = (cardPanel.getWidth()-80) / children.size;
         for (int i = 0; i < children.size; i++) {
             children.get(i).setX(v * i);
@@ -108,9 +121,14 @@ public class UserGroup extends Group {
         }
     };
 
-    public CardGroup sendCard(Card card){
+    public CardGroup sendOutCard(Card card){
         CardGroup cardGroup = cardGroupMaps.get(card);
-        aplayer.sendCard(card); //删除数据
+        aplayer.outCard(card); //删除数据
+        cardGroupMaps.removeKey(card);
+        cardGroups.removeValue(cardGroup,false);
+        if (aplayer.getCards().size == 1) {
+            unoImg.setVisible(true);
+        }
         return cardGroup;
     }
 }

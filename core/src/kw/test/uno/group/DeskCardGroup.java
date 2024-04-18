@@ -15,10 +15,9 @@ public class DeskCardGroup extends Group {
     private UnoCardData unoCardData;
     public DeskCardGroup(UnoCardData unoCardData){
         setSize(121,181);
-        setDebug(true);
         this.unoCardData = unoCardData;
 //        card
-        Image image = new Image(Asset.getAsset().getTexture("dark_b0.png"));
+        Image image = new Image(Asset.getAsset().getTexture("back.png"));
         addActor(image);
         image.setPosition(getWidth()/2.0f,getHeight()/2.0f, Align.center);
         addListener(new OrdinaryButtonListener(){
