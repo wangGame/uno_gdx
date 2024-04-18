@@ -52,14 +52,14 @@ public class UnoCardData {
             }
         }
         //变色
-        for (int i1 = 0; i1 < 4; i1++) {
+        for (int i1 = 1; i1 <= 4; i1++) {
 //            System.out.println(cardValues[13].name() + "   "+cardColors[0].name());
-            deskCard.add(new Card(cardValues[13],cardColors[0]));
+            deskCard.add(new Card(cardValues[13],cardColors[i1]));
         }
         //变色+4
-        for (int i1 = 0; i1 < 4; i1++) {
+        for (int i1 = 1; i1 <= 4; i1++) {
 //            System.out.println(cardValues[14].name() + "   "+cardColors[0].name());
-            deskCard.add(new Card(cardValues[14],cardColors[0]));
+            deskCard.add(new Card(cardValues[14],cardColors[i1]));
         }
     }
 

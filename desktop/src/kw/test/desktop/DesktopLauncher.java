@@ -8,11 +8,11 @@ import kw.test.uno.UnoGame;
 public class DesktopLauncher extends LibGdxTestMain {
     public void start(LibGdxTestMain test) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.x = 0;
+        config.x = 1200;
         config.stencil = 8;
         config.y = 0;
-        config.height = 740;
-        config.width = 1280;
+        config.height = (int) (740/6.0f);
+        config.width = (int) (1280/4.0f);
         new LwjglApplication(new UnoGame(), config);
     }
 

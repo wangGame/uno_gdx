@@ -3,6 +3,7 @@ package kw.test.uno.group;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -19,10 +20,14 @@ public class UserGroup extends Group {
     private Array<CardGroup> cardGroups;
     private Group cardPanel;
     public UserGroup(Aplayer aplayer){
+        setSize(280,180);
         this.aplayer = aplayer;
         this.cardGroupMaps = new ArrayMap<>();
         this.cardGroups = new Array<>();
         this.cardPanel = new Group();
+        cardPanel.setSize(getWidth(),getHeight());
+        cardPanel.setPosition(getWidth()/2.0f,getHeight()/2.0f, Align.center);
+        addActor(cardPanel);
     }
 
     public void addCard(Array<Card> cards){
@@ -31,17 +36,19 @@ public class UserGroup extends Group {
             cardGroupMaps.put(card,cardGroup);
             cardGroups.add(cardGroup);
             aplayer.sendCard(card);
+            cardPanel.addActor(cardGroup);
         }
-        Image o = new Image(Asset.getAsset().getTexture("dark_b0.png"));
-        addActor(o);
+
     }
 
     public void layoutCard(){
         cardGroups.sort(Comparator);
         SnapshotArray<Actor> children = cardPanel.getChildren();
         children.sort(Comparator);
+        cardPanel.setDebug(true);
+        float v = (cardPanel.getWidth()-80) / children.size;
         for (int i = 0; i < children.size; i++) {
-            children.get(i).setX(10 * i);
+            children.get(i).setX(v * i);
         }
     }
 

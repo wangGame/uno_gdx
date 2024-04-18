@@ -11,20 +11,26 @@ import com.kw.gdx.screen.BaseScreen;
 
 import kw.test.uno.data.Card;
 import kw.test.uno.data.UnoCardData;
+import kw.test.uno.group.DeskCardGroup;
+import kw.test.uno.group.OutCardGroup;
 import kw.test.uno.group.UserGroup;
 import kw.test.uno.player.Aplayer;
 import kw.test.uno.player.ComPlayer;
 import kw.test.uno.player.UserPlayer;
 
 public class GameScreen extends BaseScreen {
-    private int playerNum = 7;
+    private int playerNum = 5;
     private int initCardNum = 5;
     private Array<UserGroup> userGroups;
     private UnoCardData unoCardData;
+    private OutCardGroup outCardGroup;
+    private DeskCardGroup deskCardGroup;
     public GameScreen(BaseGame game) {
         super(game);
         this.userGroups = new Array<>();
         this.unoCardData = new UnoCardData();
+        this.outCardGroup = new OutCardGroup();
+        this.deskCardGroup = new DeskCardGroup();
     }
 
     @Override
@@ -39,12 +45,9 @@ public class GameScreen extends BaseScreen {
                 aplayer = new ComPlayer();
             }
             UserGroup userGroup = new UserGroup(aplayer);
-            userGroup.setSize(600,100);
             userGroups.add(userGroup);
-            addActor(userGroup);
+            rootView.addActor(userGroup);
             userGroup.setDebug(true);
-//            Image image = new Image(Asset.getAsset().getTexture("back.png"));
-//            addActor(image);
             userGroup.setPosition(
                     (float) (Constant.WIDTH/2.0f+(Constant.WIDTH-100)/2.0f*Math.cos(Math.toRadians(i * (360.f/playerNum)))),
                     (float)(Constant.HIGHT/2.0f+(Constant.HIGHT-100)/2.0f*Math.sin(Math.toRadians(i * (360.f/playerNum)))),
@@ -57,7 +60,19 @@ public class GameScreen extends BaseScreen {
         unoCardData.shuffle();
 
         sendCard();
+        layoutCard();
 
+
+        rootView.addActor(outCardGroup);
+        rootView.addActor(deskCardGroup);
+        outCardGroup.setPosition(Constant.WIDTH/2.0f + 100,Constant.HIGHT/2.0f,Align.center);
+        deskCardGroup.setPosition(Constant.WIDTH/2.0f - 400,Constant.HIGHT/2.0f,Align.center);
+    }
+
+    private void layoutCard() {
+        for (UserGroup userGroup : userGroups) {
+            userGroup.layoutCard();
+        }
     }
 
     private void sendCard() {
