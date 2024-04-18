@@ -28,10 +28,18 @@ public class OutCardGroup extends Group {
         stageToLocalCoordinates(vector2);
         cardGroup.setDebug(true);
         cardGroup.setPosition(vector2.x,vector2.y,Align.center);
-        cardGroup.addAction(Actions.sequence(
-                Actions.delay(i),
-                Actions.moveTo(0,0,0.2f)
-        ));
+        cardGroup.setDebug(true);
+        cardGroup.addAction(
+                Actions.parallel(
+                    Actions.sequence(
+                        Actions.delay(i),
+                        Actions.moveTo((float) ((getWidth()-100)*Math.random()),
+                                (float) ((getHeight()-100)*Math.random()),0.2f)
+                    ),
+                    Actions.sequence(
+                            Actions.delay(i),
+                        Actions.rotateTo((float) (360 * Math.random()),0.2f))
+                ));
     }
 
     public Array<Card> clearAllCardGroup(){
