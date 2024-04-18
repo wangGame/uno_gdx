@@ -13,6 +13,7 @@ import com.kw.gdx.listener.OrdinaryButtonListener;
 import com.kw.gdx.screen.BaseScreen;
 import com.kw.gdx.utils.log.NLog;
 
+import kw.test.uno.ai.ComputerAi;
 import kw.test.uno.bean.RecentBean;
 import kw.test.uno.contant.UnoConfig;
 import kw.test.uno.data.Card;
@@ -39,6 +40,9 @@ public class GameScreen extends BaseScreen {
     private RecentBean recentBean;
     private UnoUtils utils;
     private Image dirImg;
+    private ComputerAi ai;
+    private Array<Aplayer> aplayers;
+    private Image aiBtn;
 
     public GameScreen(BaseGame game) {
         super(game);
@@ -49,7 +53,12 @@ public class GameScreen extends BaseScreen {
         this.deskCardV2 = new Vector2();
         recentBean = new RecentBean();
         this.utils = new UnoUtils(userGroups);
+        this.aplayers = new Array<>();
+        this.ai = new ComputerAi(aplayers);
+        this.aiBtn = new Image(Asset.getAsset().getTexture("common/AI.png"));
     }
+
+    private Card[] tempCard = new Card[1];
 
     @Override
     public void initView() {
@@ -60,6 +69,29 @@ public class GameScreen extends BaseScreen {
         sendCard();
         layoutCard();
         startGame();
+        addActor(aiBtn);
+        aiBtn.addListener(new OrdinaryButtonListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                UserGroup userGroup = utils.currentPlayer();
+                boolean b = ai.easyAI(userGroup.getAplayer(), recentBean, tempCard);
+                if (b){
+                    sendCard(tempCard[0]);
+                }else {
+                    //点击发牌
+                    Array<Card> cards = deskCardGroup.sendCard(1);
+                    createCard(0,userGroup,cards);
+                    Card card = cards.get(0);
+                    //揭牌刚好可以打出
+                    if (utils.isLegalToPlay(recentBean,card)) {
+                        sendCard(card);
+                    }else {
+                        utils.nextPlayer();
+                    }
+                }
+            }
+        });
     }
 
     private void initBg() {
@@ -145,6 +177,7 @@ public class GameScreen extends BaseScreen {
             aplayer.setIndex(i);
             UserGroup userGroup = new UserGroup(aplayer);
             userGroups.add(userGroup);
+            aplayers.add(aplayer);
             rootView.addActor(userGroup);
             userGroup.setPosition(
                     (float) (Constant.WIDTH/2.0f+(Constant.WIDTH-100)/2.0f*Math.cos(Math.toRadians(i * (360.f/playerNum)))),

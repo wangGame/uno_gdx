@@ -100,14 +100,15 @@ public class ComputerAi {
         return false;
     }
 
-    public boolean easyAI(Aplayer aplayer,RecentBean bean,Card outCard){
+    public boolean easyAI(Aplayer aplayer,RecentBean bean,Card[] outCard){
+        outCard[0] = null;
         Array<Card> hand = aplayer.getCards();
         Card card;
         if (hand.size == 1){
             card = hand.get(0);
             //检测合法
             if (isLegalToPlay(bean,card)) {
-                outCard = card;
+                outCard[0] = card;
                 return true;
             }
             return false;
@@ -127,6 +128,7 @@ public class ComputerAi {
                 matches++;  //可以匹配
             }
             if (isLegalToPlay(bean,card)){
+                outCard[0]=card;
                 switch (card.getCardValue()){
                     case DRAW2: {
                         if (iDW < 0 || card.getCardColor() == bestColor4NowPlayer) {

@@ -137,4 +137,8 @@ public class UserGroup extends Group {
         }
         return cardGroup;
     }
+
+    public Aplayer getAplayer() {
+        return aplayer;
+    }
 }
