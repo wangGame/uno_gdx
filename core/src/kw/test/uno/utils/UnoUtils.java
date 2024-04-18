@@ -42,4 +42,14 @@ public class UnoUtils {
         }
         currentPlayer();
     }
+
+    public UserGroup nextTempPlayer() {
+        int userIndex = UnoConfig.lastUserIndex;
+        if (UnoConfig.DIR == UnoConfig.DIR_LEFT) {
+            userIndex = (++userIndex) % aplayers.size;
+        }else {
+            userIndex = (--userIndex) % aplayers.size;
+        }
+        return aplayers.get(userIndex);
+    }
 }

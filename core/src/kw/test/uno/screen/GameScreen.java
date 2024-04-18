@@ -13,8 +13,10 @@ import com.kw.gdx.screen.BaseScreen;
 import com.kw.gdx.utils.log.NLog;
 
 import kw.test.uno.bean.RecentBean;
+import kw.test.uno.contant.UnoConfig;
 import kw.test.uno.data.Card;
 import kw.test.uno.data.UnoCardData;
+import kw.test.uno.dialog.SelectColorDialog;
 import kw.test.uno.group.CardGroup;
 import kw.test.uno.group.DeskCardGroup;
 import kw.test.uno.group.OutCardGroup;
@@ -152,10 +154,33 @@ public class GameScreen extends BaseScreen {
 //                outCardGroup.addActor(cardGroup);
                 cardGroup.remove();
                 outCardGroup.outCard(card,new Vector2(vector2),0);
-
                 userGroup.layoutCard();
                 recentBean.setCardValue(card.getCardValue());
                 recentBean.setCardColor(card.getCardColor());
+
+                //出牌逻辑
+                switch (card.getCardValue()){
+                    case DRAW2:
+                        Array<Card> cards = deskCardGroup.sendCard(2);
+                        UserGroup userGroupTemp = utils.nextTempPlayer();
+                        createCard(0,userGroupTemp,cards);
+                        utils.nextPlayer();
+                        break;
+                    case REV:
+                        UnoConfig.DIR =
+                                UnoConfig.DIR==UnoConfig.DIR_LEFT ?
+                                        UnoConfig.DIR_RIGHT:UnoConfig.DIR_LEFT;
+                        break;
+                    case SKIP:
+                        utils.nextPlayer();
+                        break;
+                    case WILD:
+                        showDialog(new SelectColorDialog(recentBean));
+                        break;
+                    case WILD_DRAW4:
+                        showDialog(new SelectColorDialog(recentBean));
+                        break;
+                }
                 utils.nextPlayer();
             }
         }

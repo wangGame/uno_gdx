@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>frames</key>
+		<dict>
+			<key>selectdialog/1.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{2,2},{121,121}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false />
+				<key>sourceSize</key>
+				<string>{121,121}</string>
+			</dict>
+			<key>selectdialog/2.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{127,2},{121,121}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false />
+				<key>sourceSize</key>
+				<string>{121,121}</string>
+			</dict>
+			<key>selectdialog/3.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{2,127},{121,121}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false />
+				<key>sourceSize</key>
+				<string>{121,121}</string>
+			</dict>
+			<key>selectdialog/4.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{127,127},{121,121}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false />
+				<key>sourceSize</key>
+				<string>{121,121}</string>
+			</dict>
+		</dict>
+		<key>metadata</key>
+		<dict>
+			<key>format</key>
+			<integer>2</integer>
+			<key>textureFileName</key>
+			<string>selectdialogplist.png</string>
+			<key>realTextureFileName</key>
+			<string>selectdialogplist.png</string>
+			<key>size</key>
+			<string>{250,250}</string>
+		</dict>
+		<key>texture</key>
+		<dict>
+			<key>width</key>
+			<integer>250</integer>
+			<key>height</key>
+			<integer>250</integer>
+		</dict>
+	</dict>
+</plist>
