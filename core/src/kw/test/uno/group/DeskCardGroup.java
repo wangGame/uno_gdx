@@ -9,12 +9,14 @@ import com.kw.gdx.asset.Asset;
 import com.kw.gdx.listener.OrdinaryButtonListener;
 
 import kw.test.uno.data.Card;
+import kw.test.uno.data.UnoCardData;
 
 public class DeskCardGroup extends Group {
-    private Array<Card> cards;
-    public DeskCardGroup(){
+    private UnoCardData unoCardData;
+    public DeskCardGroup(UnoCardData unoCardData){
         setSize(121,181);
         setDebug(true);
+        this.unoCardData = unoCardData;
 //        card
         Image image = new Image(Asset.getAsset().getTexture("dark_b0.png"));
         addActor(image);
@@ -26,16 +28,15 @@ public class DeskCardGroup extends Group {
                 sendCard(1);
             }
         });
+        unoCardData.initDeskCard();
+        unoCardData.shuffle();
     }
+
 
     public Array<Card> sendCard(int num){
         Array<Card> sendCards = new Array<>();
-        if (num<cards.size) {
-            Card card = cards.removeIndex(0);
-            sendCards.add(card);
-        }else {
-            //收集废弃
-        }
+        Array<Card> cards = unoCardData.sendCard(num);
+        sendCards.addAll(cards);
         return sendCards;
     }
 }

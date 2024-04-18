@@ -1,13 +1,18 @@
 package kw.test.uno.group;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.kw.gdx.asset.Asset;
+import com.kw.gdx.listener.OrdinaryButtonListener;
 
 import java.util.Comparator;
 
@@ -30,13 +35,40 @@ public class UserGroup extends Group {
         addActor(cardPanel);
     }
 
-    public void addCard(Array<Card> cards){
+    public void addCard(Array<Card> cards, Vector2 vector2, float time){
         for (Card card : cards) {
+            stageToLocalCoordinates(vector2);
             CardGroup cardGroup = new CardGroup(card);
             cardGroupMaps.put(card,cardGroup);
             cardGroups.add(cardGroup);
             aplayer.sendCard(card);
             cardPanel.addActor(cardGroup);
+            cardGroup.setVisible(false);
+            cardGroup.toBack();
+            cardGroup.setPosition(vector2.x,vector2.y,Align.center);
+
+            cardGroup.addListener(new OrdinaryButtonListener(){
+                float yyy = 0;
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    super.enter(event, x, y, pointer, fromActor);
+                    cardGroup.setY(yyy + 30);
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    super.exit(event, x, y, pointer, toActor);
+                    cardGroup.setY(yyy);
+                }
+            });
+            cardGroup.addAction(Actions.sequence(
+                    Actions.delay(time),
+                    Actions.visible(true),
+                    Actions.moveTo(0,0,0.2f),
+                    Actions.run(()->{
+                        layoutCard();
+                    })
+            ));
         }
 
     }

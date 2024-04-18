@@ -24,4 +24,12 @@ public class Card {
     public CardValue getCardValue() {
         return cardValue;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "cardColor=" + cardColor +
+                ", cardValue=" + cardValue +
+                '}';
+    }
 }

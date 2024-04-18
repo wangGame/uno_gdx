@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.github.hikari_toyama.unocard.core.Card;
 import com.kw.gdx.asset.Asset;
 
+import kw.test.uno.data.UnoCardData;
+
 public class OutCardGroup extends Group {
     private Array<CardGroup> cards = new Array<>();
     public OutCardGroup(){

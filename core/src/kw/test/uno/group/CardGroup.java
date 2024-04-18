@@ -1,8 +1,11 @@
 package kw.test.uno.group;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.kw.gdx.asset.Asset;
+import com.kw.gdx.listener.OrdinaryButtonListener;
 
 import kw.test.uno.data.Card;
 
@@ -40,6 +43,7 @@ public class CardGroup extends Group {
         System.out.println(str);
         cardImg = new Image(Asset.getAsset().getTexture(str));
         addActor(cardImg);
+
     }
 
     public Card getCard() {
