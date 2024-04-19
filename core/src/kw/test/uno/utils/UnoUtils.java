@@ -2,7 +2,6 @@ package kw.test.uno.utils;
 
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Array;
-import com.github.hikari_toyama.unocard.core.Uno;
 
 import kw.test.uno.bean.RecentBean;
 import kw.test.uno.contant.UnoConfig;
@@ -47,9 +46,9 @@ public class UnoUtils {
     public UserGroup nextTempPlayer() {
         int userIndex = UnoConfig.lastUserIndex;
         if (UnoConfig.DIR == UnoConfig.DIR_LEFT) {
-            userIndex = (++userIndex) % aplayers.size;
+            userIndex = (++userIndex+aplayers.size) % aplayers.size;
         }else {
-            userIndex = (--userIndex) % aplayers.size;
+            userIndex = (--userIndex+aplayers.size) % aplayers.size;
         }
         return aplayers.get(userIndex);
     }
@@ -77,5 +76,15 @@ public class UnoUtils {
             }
         }
         return "refresh_icon_wild_anticlock.png";
+    }
+
+    public UserGroup prevTempPlayer() {
+        int userIndex = UnoConfig.lastUserIndex;
+        if (UnoConfig.DIR == UnoConfig.DIR_RIGHT) {
+            userIndex = (++userIndex+aplayers.size) % aplayers.size;
+        }else {
+            userIndex = (--userIndex+aplayers.size) % aplayers.size;
+        }
+        return aplayers.get(userIndex);
     }
 }

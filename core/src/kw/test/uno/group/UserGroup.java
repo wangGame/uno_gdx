@@ -142,4 +142,11 @@ public class UserGroup extends Group {
     public Aplayer getAplayer() {
         return aplayer;
     }
+
+    /**
+     * 展示挑战弹窗
+     */
+    public void showChallenge() {
+
+    }
 }

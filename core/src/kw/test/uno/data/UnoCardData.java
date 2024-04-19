@@ -1,8 +1,6 @@
 package kw.test.uno.data;
 
 import com.badlogic.gdx.utils.Array;
-import com.github.hikari_toyama.unocard.core.CardColorEnum;
-import com.github.hikari_toyama.unocard.core.Content;
 
 import kw.test.uno.contant.UnoConfig;
 

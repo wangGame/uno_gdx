@@ -7,7 +7,9 @@ import kw.test.uno.contant.UnoConfig;
 import kw.test.uno.data.Card;
 import kw.test.uno.data.CardColor;
 import kw.test.uno.data.CardValue;
+import kw.test.uno.group.UserGroup;
 import kw.test.uno.player.Aplayer;
+import kw.test.uno.utils.UnoUtils;
 
 public class ComputerAi {
     private Array<Aplayer> userPlayers;
@@ -19,9 +21,22 @@ public class ComputerAi {
     public CardColor calcBestColor4NowPlayer(Aplayer currentPlayer){
         CardColor bestColor = CardColor.NONE;
         CardColor tempColor = CardColor.NONE;
-        for (Aplayer userPlayer : userPlayers) {
-            if (userPlayer == currentPlayer)continue; // 自己跳过
+        /**
+         * 更新一下，从自己的下一个开始
+         */
+        int index = currentPlayer.getIndex();
+        for (int i = 1; i < userPlayers.size; i++) {
+            if (UnoConfig.DIR == UnoConfig.DIR_LEFT){
+                index+=i;
+            }else {
+                index-=i;
+            }
+            index =( index + userPlayers.size ) % userPlayers.size;
+            Aplayer userPlayer = userPlayers.get(index);
             CardColor weakCardColor = userPlayer.getWeakCardColor();
+            /**
+             * 如果用户已经uno了，最好的颜色就是他们不存在的颜色
+             */
             boolean uno = userPlayer.isUno();
             if (tempColor == CardColor.NONE) {
                 if (weakCardColor != CardColor.NONE) {
@@ -77,7 +92,16 @@ public class ComputerAi {
             }
         }
         //如果自己颜色是下一个的强色，那么就不要使用。
-        for (Aplayer userPlayer : userPlayers) {
+
+        index = currentPlayer.getIndex();
+        for (int i = 1; i < userPlayers.size; i++) {
+            if (UnoConfig.DIR == UnoConfig.DIR_LEFT){
+                index+=i;
+            }else {
+                index-=i;
+            }
+            index =( index + userPlayers.size ) % userPlayers.size;
+            Aplayer userPlayer = userPlayers.get(index);
             if (userPlayer.isUno()) {
                 if (bestColor == userPlayer.getStrongCardColor()) {
                     bestColor = CardColor.values()[UnoConfig.random.nextInt(4) + 1];
@@ -88,22 +112,89 @@ public class ComputerAi {
     }
 
     /**
-     * 交换牌规则不知道什么意思  忽略
+     * 和谁交换
      * @return
      */
-    public int calcBestSwapTarget4NowPlayer() {
-        return 0;
+    public Aplayer calcBestSwapTarget4NowPlayer(Aplayer aplayer, RecentBean recentBean, UnoUtils utils) {
+        int index = aplayer.getIndex();
+        for (int i = 1; i < userPlayers.size; i++) {
+            if (UnoConfig.DIR == UnoConfig.DIR_LEFT){
+                index+=i;
+            }else {
+                index-=i;
+            }
+            index =( index + userPlayers.size ) % userPlayers.size;
+            Aplayer userPlayer = userPlayers.get(index);
+            if (aplayer == userPlayer) {
+                continue;
+            }
+            if (userPlayer.isUno()) {
+                return userPlayer;
+            }
+        }
+        index = aplayer.getIndex();
+        for (int i = 1; i < userPlayers.size; i++) {
+            if (UnoConfig.DIR == UnoConfig.DIR_LEFT){
+                index+=i;
+            }else {
+                index-=i;
+            }
+            index =( index + userPlayers.size ) % userPlayers.size;
+            Aplayer userPlayer = userPlayers.get(index);
+            if (recentBean.getCardColor() == userPlayer.getStrongCardColor()) {
+                return userPlayer;
+            }
+        }
+        UserGroup currentPlayer = utils.currentPlayer();
+        UserGroup temp = utils.nextTempPlayer();
+        if (currentPlayer.getAplayer().isUno()&&
+            isLegalToPlay(recentBean,currentPlayer.getAplayer().getCards().get(0))){
+            temp = utils.prevTempPlayer();
+        }
+        return temp.getAplayer();
     }
 
     /**
      * 挑战规则我在查查
      * @param recentBean
+     * @param oldCardColor
      * @return
      */
-    public boolean needToChallenge(RecentBean recentBean){
-        CardColor cardColor = recentBean.getCardColor();
-        CardValue cardValue = recentBean.getCardValue();
+    public boolean needToChallenge(RecentBean recentBean, UnoUtils utils, CardColor oldCardColor){
+        UserGroup prevTempPlayer = utils.prevTempPlayer();
+        UserGroup currentPlayer = utils.currentPlayer();
+
+        if (prevTempPlayer.getAplayer().isUno()) {
+            return true;
+        }
+        if (prevTempPlayer.getAplayer().getCards().size>10){
+            return true;
+        }
+        if (currentPlayer.getAplayer().getCards().size>10){
+            return true;
+        }
+        /**
+         * 没有改变颜色的时候
+         */
+        if (recentBean.getCardColor() == oldCardColor){
+            return true;
+        }
         return false;
+    }
+
+    /**
+     * 直接操作用户的顺序  也就是数组的顺序
+     */
+    public void swap(Array userPlayers,int index1,int index2){
+        Object o = userPlayers.get(index1);
+        Object o1 = userPlayers.get(index2);
+        userPlayers.set(index1,o1);
+        userPlayers.set(index2,o);
+    }
+
+    public void cycle(Array userPlayers){
+        Object o = userPlayers.removeIndex(userPlayers.size - 1);
+        userPlayers.insert(0,o);
     }
 
     public boolean easyAI(Aplayer aplayer,RecentBean bean,Card[] outCard){

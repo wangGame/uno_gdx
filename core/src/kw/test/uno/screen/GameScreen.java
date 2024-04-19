@@ -1,5 +1,6 @@
 package kw.test.uno.screen;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -19,6 +20,7 @@ import kw.test.uno.contant.UnoConfig;
 import kw.test.uno.data.Card;
 import kw.test.uno.data.CardColor;
 import kw.test.uno.data.UnoCardData;
+import kw.test.uno.dialog.ChallengeDialog;
 import kw.test.uno.dialog.SelectColorDialog;
 import kw.test.uno.dialog.SuccessDialog;
 import kw.test.uno.group.CardGroup;
@@ -249,6 +251,8 @@ public class GameScreen extends BaseScreen {
         if (oldCardColor != recentBean.getCardColor()){
             updateDirImg();
         }
+        boolean challege = false;
+        CardColor oldColor = recentBean.getCardColor();
         //出牌逻辑
         switch (card.getCardValue()){
             case DRAW2:
@@ -282,25 +286,31 @@ public class GameScreen extends BaseScreen {
                 }
                 break;
             case WILD_DRAW4:
+                challege = true;
                 if (auto){
                     int v = (int) (CardColor.values().length * Math.random());
                     recentBean.setCardColor(CardColor.values()[v]);
                     updateDirImg();
-                    Array<Card> cards1 = deskCardGroup.sendCard(4);
-                    createCard(0,utils.currentPlayer(),cards1);
-                    utils.nextPlayer();
+//                    if (ai.needToChallenge(recentBean,utils)){
+//
+//                    }else {
+//                        Array<Card> cards1 = deskCardGroup.sendCard(4);
+//                        createCard(0,utils.currentPlayer(),cards1);
+//                        utils.nextPlayer();
+//                    }
+                }else {
+                    showDialog(new SelectColorDialog(recentBean, new SignListener() {
+                        @Override
+                        public void sign(Object object) {
+                            super.sign(object);
+                            updateDirImg();
+//                            Array<Card> cards1 = deskCardGroup.sendCard(4);
+//                            createCard(0, utils.currentPlayer(), cards1);
+//                            utils.nextPlayer();
+//                            utils.currentPlayer().getAplayer().setStrongCardColor(recentBean.getCardColor());
+                        }
+                    }));
                 }
-                showDialog(new SelectColorDialog(recentBean, new SignListener(){
-                    @Override
-                    public void sign(Object object) {
-                        super.sign(object);
-                        updateDirImg();
-                        Array<Card> cards1 = deskCardGroup.sendCard(4);
-                        createCard(0,utils.currentPlayer(),cards1);
-                        utils.nextPlayer();
-                        utils.currentPlayer().getAplayer().setStrongCardColor(recentBean.getCardColor());
-                    }
-                }));
                 break;
         }
         UserGroup currentPlayer = utils.currentPlayer();
@@ -309,6 +319,50 @@ public class GameScreen extends BaseScreen {
             return;
         }
         utils.nextPlayer();
+        if (challege){
+            if (auto) {
+                if (ai.needToChallenge(recentBean,utils,oldCardColor)) {
+                    UserGroup prevTempPlayer = utils.prevTempPlayer();
+                    Array<Card> cards = prevTempPlayer.getAplayer().getCards();
+                    Card random = cards.random();
+                    if (random.getCardColor() == oldColor){
+                        createCard(0,prevTempPlayer,cards);
+                    }else {
+                        createCard(0,utils.currentPlayer(),cards);
+                        utils.nextPlayer();
+                    }
+                }else {
+                    Array<Card> cards1 = deskCardGroup.sendCard(4);
+                    createCard(0,utils.currentPlayer(),cards1);
+                    utils.nextPlayer();
+                }
+            }else {
+                showDialog(new ChallengeDialog(new SignListener(){
+                    @Override
+                    public void sign(Object object) {
+                        super.sign(object);
+                        if (object instanceof Integer) {
+                            int returnValue = (int)object;
+                            if (returnValue == 1){
+                                Array<Card> cards1 = deskCardGroup.sendCard(4);
+                                createCard(0,utils.currentPlayer(),cards1);
+                                utils.nextPlayer();
+                            }else {
+                                UserGroup prevTempPlayer = utils.prevTempPlayer();
+                                Array<Card> cards = prevTempPlayer.getAplayer().getCards();
+                                Card random = cards.random();
+                                if (random.getCardColor() == oldColor){
+                                    createCard(0,prevTempPlayer,cards);
+                                }else {
+                                    createCard(0,utils.currentPlayer(),cards);
+                                    utils.nextPlayer();
+                                }
+                            }
+                        }
+                    }
+                }));
+            }
+        }
     }
 
 }

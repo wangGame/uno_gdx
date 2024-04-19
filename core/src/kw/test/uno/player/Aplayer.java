@@ -72,4 +72,11 @@ public abstract class Aplayer {
                 '}';
     }
 
+    /**
+     * 用户交换
+     * @param cards
+     */
+    public void setCard(Array<Card> cards){
+        this.cards = cards;
+    }
 }
