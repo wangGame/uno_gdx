@@ -29,6 +29,8 @@
             "ColorVector": {
               "ScaleY": 1.0
             },
+            "Scale9Width": 1,
+            "Scale9Height": 1,
             "TouchEnable": true,
             "AnchorPoint": {},
             "Position": {
@@ -66,6 +68,8 @@
                 "ColorVector": {
                   "ScaleY": 1.0
                 },
+                "Scale9Width": 1,
+                "Scale9Height": 1,
                 "TouchEnable": true,
                 "AnchorPoint": {
                   "ScaleX": 0.5,
@@ -140,6 +144,11 @@
                   },
                   {
                     "LabelText": "YES",
+                    "LabelBMFontFile_CNB": {
+                      "Type": "Normal",
+                      "Path": "font/frmb-40.fnt",
+                      "Plist": ""
+                    },
                     "AnchorPoint": {
                       "ScaleX": 0.5,
                       "ScaleY": 0.5
@@ -159,18 +168,18 @@
                       "Y": 0.4845
                     },
                     "PreSize": {
-                      "X": 0.1345,
-                      "Y": 0.1546
+                      "X": 0.4211,
+                      "Y": 0.5464
                     },
-                    "LeftMargin": 73.5,
-                    "RightMargin": 74.5,
-                    "TopMargin": 42.5,
-                    "BottomMargin": 39.5,
+                    "LeftMargin": 49.0,
+                    "RightMargin": 50.0,
+                    "TopMargin": 23.5,
+                    "BottomMargin": 20.5,
                     "Tag": 23,
                     "ActionTag": -1027222344,
                     "Size": {
-                      "X": 23.0,
-                      "Y": 15.0
+                      "X": 72.0,
+                      "Y": 53.0
                     },
                     "Name": "label",
                     "ctype": "TextBMFontObjectData"
@@ -199,6 +208,8 @@
                 "ColorVector": {
                   "ScaleY": 1.0
                 },
+                "Scale9Width": 1,
+                "Scale9Height": 1,
                 "TouchEnable": true,
                 "AnchorPoint": {
                   "ScaleX": 0.5,
@@ -270,6 +281,11 @@
                   },
                   {
                     "LabelText": "NO",
+                    "LabelBMFontFile_CNB": {
+                      "Type": "Normal",
+                      "Path": "font/frmb-40.fnt",
+                      "Plist": ""
+                    },
                     "AnchorPoint": {
                       "ScaleX": 0.5,
                       "ScaleY": 0.5
@@ -289,18 +305,18 @@
                       "Y": 0.4947
                     },
                     "PreSize": {
-                      "X": 0.1065,
-                      "Y": 0.1579
+                      "X": 0.3491,
+                      "Y": 0.5579
                     },
-                    "LeftMargin": 76.0,
-                    "RightMargin": 75.0,
-                    "TopMargin": 40.5,
-                    "BottomMargin": 39.5,
+                    "LeftMargin": 55.5,
+                    "RightMargin": 54.5,
+                    "TopMargin": 21.5,
+                    "BottomMargin": 20.5,
                     "Tag": 25,
                     "ActionTag": -1933280023,
                     "Size": {
-                      "X": 18.0,
-                      "Y": 15.0
+                      "X": 59.0,
+                      "Y": 53.0
                     },
                     "Name": "label",
                     "ctype": "TextBMFontObjectData"
@@ -332,6 +348,8 @@
         "ctype": "SingleNodeObjectData"
       },
       "UsedResources": [
+        "font/frmb-40.fnt",
+        "font/frmb-40.png",
         "plist/challengePlist.plist",
         "plist/challengePlist.png"
       ],

@@ -29,7 +29,7 @@ public class UserGroup extends Group {
     private Image unoImg;
 
     public UserGroup(Aplayer aplayer){
-        setSize(280,180);
+        setSize(480,180);
         setDebug(true);
         this.aplayer = aplayer;
         this.cardGroupMaps = new ArrayMap<>();
@@ -61,7 +61,11 @@ public class UserGroup extends Group {
     public void addCard(Array<Card> cards, Vector2 vector2, float time, SignListener signListener){
         for (Card card : cards) {
             stageToLocalCoordinates(vector2);
-            CardGroup cardGroup = new CardGroup(card);
+            boolean hide = true;
+            if (aplayer.getIndex() == 0){
+                hide = false;
+            }
+            CardGroup cardGroup = new CardGroup(card,hide);
             cardGroupMaps.put(card,cardGroup);
             cardGroups.add(cardGroup);
             aplayer.sendCard(card);

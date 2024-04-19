@@ -67,7 +67,6 @@ public class GameScreen extends BaseScreen {
         super.initView();
         initBg();
         initDeskCard();
-        initDeskCard();
         initPlayerPanel();
         sendCard();
         layoutCard();
@@ -81,26 +80,36 @@ public class GameScreen extends BaseScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                UserGroup userGroup = utils.currentPlayer();
-                boolean b = ai.easyAI(userGroup.getAplayer(), recentBean, tempCard);
-                if (b){
-                    sendCard(tempCard[0],true);
-                }else {
-                    //点击发牌
-                    UserGroup currentPlayer = utils.currentPlayer();
-                    currentPlayer.getAplayer().setWeakCardColor(recentBean.getCardColor());
-                    Array<Card> cards = deskCardGroup.sendCard(1);
-                    createCard(0,userGroup,cards);
-                    Card card = cards.get(0);
-                    //揭牌刚好可以打出
-                    if (utils.isLegalToPlay(recentBean,card)) {
-                        sendCard(card,true);
-                    }else {
-                        utils.nextPlayer();
-                    }
-                }
+                aiRunning();
             }
         });
+    }
+
+    private void aiRunning() {
+        UserGroup userGroup = utils.currentPlayer();
+        boolean b = ai.easyAI(userGroup.getAplayer(), recentBean, tempCard);
+        if (b){
+            sendCard(tempCard[0],true);
+        }else {
+            //点击发牌
+            UserGroup currentPlayer = utils.currentPlayer();
+            currentPlayer.getAplayer().setWeakCardColor(recentBean.getCardColor());
+            Array<Card> cards = deskCardGroup.sendCard(1);
+            createCard(0,userGroup,cards);
+            Card card = cards.get(0);
+            //揭牌刚好可以打出
+            if (utils.isLegalToPlay(recentBean,card)) {
+                sendCard(card,true);
+            }else {
+                utils.nextPlayer();
+                UserGroup currentPlayer1 = utils.currentPlayer();
+                if (currentPlayer1.getAplayer().getIndex() != 0) {
+                    stage.addAction(Actions.delay(1, Actions.run(() -> {
+                        aiRunning();
+                    })));
+                }
+            }
+        }
     }
 
     private void initBg() {
@@ -172,6 +181,12 @@ public class GameScreen extends BaseScreen {
                     sendCard(card,false);
                 }else {
                     utils.nextPlayer();
+                    UserGroup currentPlayer1 = utils.currentPlayer();
+                    if (currentPlayer1.getAplayer().getIndex() != 0) {
+                        stage.addAction(Actions.delay(1, Actions.run(() -> {
+                            aiRunning();
+                        })));
+                    }
                 }
             }
         });
@@ -191,11 +206,11 @@ public class GameScreen extends BaseScreen {
             aplayers.add(aplayer);
             rootView.addActor(userGroup);
             userGroup.setPosition(
-                    (float) (Constant.WIDTH/2.0f+(Constant.WIDTH-100)/2.0f*Math.cos(Math.toRadians(i * (360.f/playerNum)))),
-                    (float)(Constant.HIGHT/2.0f+(Constant.HIGHT-100)/2.0f*Math.sin(Math.toRadians(i * (360.f/playerNum)))),
+                    (float) (Constant.WIDTH/2.0f+(Constant.WIDTH-100)/2.0f*Math.cos(Math.toRadians(i * (360.f/playerNum) - 90))),
+                    (float)(Constant.HIGHT/2.0f+(Constant.HIGHT-100)/2.0f*Math.sin(Math.toRadians(i * (360.f/playerNum)- 90))),
                     Align.center);
             userGroup.setOrigin(Align.center);
-            userGroup.setRotation(90 + i * (360.f/playerNum));
+            userGroup.setRotation(90 + i * (360.f/playerNum)- 90);
         }
     }
 
@@ -251,6 +266,7 @@ public class GameScreen extends BaseScreen {
         if (oldCardColor != recentBean.getCardColor()){
             updateDirImg();
         }
+        boolean showSelectColor = false;
         boolean challege = false;
         CardColor oldColor = recentBean.getCardColor();
         //出牌逻辑
@@ -276,11 +292,18 @@ public class GameScreen extends BaseScreen {
                     recentBean.setCardColor(CardColor.values()[v]);
                     updateDirImg();
                 }else {
+                    showSelectColor = true;
                     showDialog(new SelectColorDialog(recentBean,new SignListener(){
                         @Override
                         public void sign(Object object) {
                             super.sign(object);
                             updateDirImg();
+                            UserGroup currentPlayer1 = utils.currentPlayer();
+                            if (currentPlayer1.getAplayer().getIndex() != 0) {
+                                stage.addAction(Actions.delay(1, Actions.run(() -> {
+                                    aiRunning();
+                                })));
+                            }
                         }
                     }));
                 }
@@ -299,11 +322,18 @@ public class GameScreen extends BaseScreen {
 //                        utils.nextPlayer();
 //                    }
                 }else {
+                    showSelectColor = true;
                     showDialog(new SelectColorDialog(recentBean, new SignListener() {
                         @Override
                         public void sign(Object object) {
                             super.sign(object);
                             updateDirImg();
+                            UserGroup currentPlayer1 = utils.currentPlayer();
+                            if (currentPlayer1.getAplayer().getIndex() != 0) {
+                                stage.addAction(Actions.delay(1, Actions.run(() -> {
+                                    aiRunning();
+                                })));
+                            }
 //                            Array<Card> cards1 = deskCardGroup.sendCard(4);
 //                            createCard(0, utils.currentPlayer(), cards1);
 //                            utils.nextPlayer();
@@ -336,6 +366,13 @@ public class GameScreen extends BaseScreen {
                     createCard(0,utils.currentPlayer(),cards1);
                     utils.nextPlayer();
                 }
+                UserGroup currentPlayer1 = utils.currentPlayer();
+                if (currentPlayer1.getAplayer().getIndex() != 0) {
+                    stage.addAction(Actions.delay(1, Actions.run(() -> {
+                        aiRunning();
+                    })));
+                }
+
             }else {
                 showDialog(new ChallengeDialog(new SignListener(){
                     @Override
@@ -358,9 +395,24 @@ public class GameScreen extends BaseScreen {
                                     utils.nextPlayer();
                                 }
                             }
+                            UserGroup currentPlayer1 = utils.currentPlayer();
+                            if (currentPlayer1.getAplayer().getIndex() != 0) {
+                                stage.addAction(Actions.delay(1, Actions.run(() -> {
+                                    aiRunning();
+                                })));
+                            }
                         }
                     }
                 }));
+            }
+        }else {
+            if (!showSelectColor) {
+                UserGroup currentPlayer1 = utils.currentPlayer();
+                if (currentPlayer1.getAplayer().getIndex() != 0) {
+                    stage.addAction(Actions.delay(1, Actions.run(() -> {
+                        aiRunning();
+                    })));
+                }
             }
         }
     }

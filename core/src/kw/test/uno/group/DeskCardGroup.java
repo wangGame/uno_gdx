@@ -20,13 +20,7 @@ public class DeskCardGroup extends Group {
         Image image = new Image(Asset.getAsset().getTexture("back.png"));
         addActor(image);
         image.setPosition(getWidth()/2.0f,getHeight()/2.0f, Align.center);
-        addListener(new OrdinaryButtonListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                sendCard(1);
-            }
-        });
+
         unoCardData.initDeskCard();
         unoCardData.shuffle();
     }

@@ -21,7 +21,9 @@ public class UnoUtils {
             aplayer.setTouchable(Touchable.disabled);
         }
         UserGroup userGroup = aplayers.get(UnoConfig.lastUserIndex);
-        userGroup.setTouchable(Touchable.enabled);
+        if (UnoConfig.lastUserIndex == 0) {
+            userGroup.setTouchable(Touchable.enabled);
+        }
         return userGroup;
     }
 

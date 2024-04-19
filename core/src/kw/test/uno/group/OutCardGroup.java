@@ -19,7 +19,7 @@ public class OutCardGroup extends Group {
 
     public void outCard(Card card, Vector2 vector2, int i){
         cards.add(card);
-        CardGroup cardGroup = new CardGroup(card);
+        CardGroup cardGroup = new CardGroup(card,false);
         addActor(cardGroup);
         stageToLocalCoordinates(vector2);
         cardGroup.setPosition(vector2.x,vector2.y,Align.center);
