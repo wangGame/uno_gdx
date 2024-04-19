@@ -18,6 +18,7 @@ public abstract class Aplayer {
      * 3，万能牌的时候NONE
      */
     private CardColor weakCardColor;
+    private CardColor strongCardColor;
     public Aplayer(){
         cards = new Array<>();
     }
@@ -54,6 +55,14 @@ public abstract class Aplayer {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public void setStrongCardColor(CardColor strongCardColor) {
+        this.strongCardColor = strongCardColor;
+    }
+
+    public CardColor getStrongCardColor() {
+        return strongCardColor;
     }
 
     @Override

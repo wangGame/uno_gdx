@@ -65,6 +65,7 @@ public class GameScreen extends BaseScreen {
         super.initView();
         initBg();
         initDeskCard();
+        initDeskCard();
         initPlayerPanel();
         sendCard();
         layoutCard();
@@ -84,6 +85,8 @@ public class GameScreen extends BaseScreen {
                     sendCard(tempCard[0],true);
                 }else {
                     //点击发牌
+                    UserGroup currentPlayer = utils.currentPlayer();
+                    currentPlayer.getAplayer().setWeakCardColor(recentBean.getCardColor());
                     Array<Card> cards = deskCardGroup.sendCard(1);
                     createCard(0,userGroup,cards);
                     Card card = cards.get(0);
@@ -155,6 +158,8 @@ public class GameScreen extends BaseScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                UserGroup currentPlayer = utils.currentPlayer();
+                currentPlayer.getAplayer().setWeakCardColor(recentBean.getCardColor());
                 //点击发牌
                 UserGroup userGroup = utils.currentPlayer();
                 Array<Card> cards = deskCardGroup.sendCard(1);
@@ -293,6 +298,7 @@ public class GameScreen extends BaseScreen {
                         Array<Card> cards1 = deskCardGroup.sendCard(4);
                         createCard(0,utils.currentPlayer(),cards1);
                         utils.nextPlayer();
+                        utils.currentPlayer().getAplayer().setStrongCardColor(recentBean.getCardColor());
                     }
                 }));
                 break;
