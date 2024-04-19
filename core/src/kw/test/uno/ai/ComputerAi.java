@@ -169,7 +169,10 @@ public class ComputerAi {
                 }
             }
         }
-        return false;
+        if (outCard[0] == null){
+            return false;
+        }
+        return true;
     }
 
     public boolean isLegalToPlay(RecentBean bean,Card card){

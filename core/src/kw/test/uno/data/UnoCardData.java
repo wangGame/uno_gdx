@@ -30,25 +30,27 @@ public class UnoCardData {
                 deskCard.add(new Card(cardValues[i],cardColors[i1]));
             }
         }
-        //禁止
+
+
+        //加+2
         for (int i = 0; i < 2; i++) {
-            for (int i1 = 1; i1 <= 4; i1++) {
-//                System.out.println(cardValues[12].name() + "   "+cardColors[i1].name());
-                deskCard.add(new Card(cardValues[i],cardColors[i1]));
+            for (int i1 = 1; i1 < 4; i1++) {
+//                System.out.println(cardValues[10].name() + "   "+cardColors[i1].name());
+                deskCard.add(new Card(cardValues[10],cardColors[i1]));
             }
         }
         //转换
         for (int i = 0; i < 2; i++) {
             for (int i1 = 1; i1 <= 4; i1++) {
 //                System.out.println(cardValues[11].name() + "   "+cardColors[i1].name());
-                deskCard.add(new Card(cardValues[i],cardColors[i1]));
+                deskCard.add(new Card(cardValues[11],cardColors[i1]));
             }
         }
-        //加+2
+        //禁止  skip
         for (int i = 0; i < 2; i++) {
-            for (int i1 = 1; i1 < 4; i1++) {
-//                System.out.println(cardValues[10].name() + "   "+cardColors[i1].name());
-                deskCard.add(new Card(cardValues[10],cardColors[i1]));
+            for (int i1 = 1; i1 <= 4; i1++) {
+//                System.out.println(cardValues[12].name() + "   "+cardColors[i1].name());
+                deskCard.add(new Card(cardValues[12],cardColors[i1]));
             }
         }
         //变色

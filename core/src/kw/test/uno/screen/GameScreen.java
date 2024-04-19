@@ -20,6 +20,7 @@ import kw.test.uno.data.Card;
 import kw.test.uno.data.CardColor;
 import kw.test.uno.data.UnoCardData;
 import kw.test.uno.dialog.SelectColorDialog;
+import kw.test.uno.dialog.SuccessDialog;
 import kw.test.uno.group.CardGroup;
 import kw.test.uno.group.DeskCardGroup;
 import kw.test.uno.group.OutCardGroup;
@@ -251,6 +252,7 @@ public class GameScreen extends BaseScreen {
                 UnoConfig.DIR =
                         UnoConfig.DIR==UnoConfig.DIR_LEFT ?
                                 UnoConfig.DIR_RIGHT:UnoConfig.DIR_LEFT;
+                updateDirImg();
                 break;
             case SKIP:
                 utils.nextPlayer();
@@ -276,6 +278,11 @@ public class GameScreen extends BaseScreen {
                     }
                 }));
                 break;
+        }
+        UserGroup currentPlayer = utils.currentPlayer();
+        if (currentPlayer.getAplayer().getCards().size == 0) {
+            showDialog(new SuccessDialog());
+            return;
         }
         utils.nextPlayer();
     }

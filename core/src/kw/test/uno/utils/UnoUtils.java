@@ -37,9 +37,9 @@ public class UnoUtils {
 
     public void nextPlayer() {
         if (UnoConfig.DIR == UnoConfig.DIR_LEFT) {
-            UnoConfig.lastUserIndex = (++UnoConfig.lastUserIndex) % aplayers.size;
+            UnoConfig.lastUserIndex = (++UnoConfig.lastUserIndex+aplayers.size) % aplayers.size;
         }else {
-            UnoConfig.lastUserIndex = (--UnoConfig.lastUserIndex) % aplayers.size;
+            UnoConfig.lastUserIndex = (--UnoConfig.lastUserIndex+aplayers.size) % aplayers.size;
         }
         currentPlayer();
     }
