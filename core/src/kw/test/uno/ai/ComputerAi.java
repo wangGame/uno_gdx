@@ -77,7 +77,13 @@ public class ComputerAi {
             }
         }
         //如果自己颜色是下一个的强色，那么就不要使用。
-
+        for (Aplayer userPlayer : userPlayers) {
+            if (userPlayer.isUno()) {
+                if (bestColor == userPlayer.getStrongCardColor()) {
+                    bestColor = CardColor.values()[UnoConfig.random.nextInt(4) + 1];
+                }
+            }
+        }
         return bestColor;
     }
 
