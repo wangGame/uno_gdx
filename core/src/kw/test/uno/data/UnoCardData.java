@@ -63,6 +63,7 @@ public class UnoCardData {
 //            System.out.println(cardValues[14].name() + "   "+cardColors[0].name());
             deskCard.add(new Card(cardValues[14],cardColors[i1]));
         }
+        //牌是不太对劲的
     }
 
     public void shuffle(){

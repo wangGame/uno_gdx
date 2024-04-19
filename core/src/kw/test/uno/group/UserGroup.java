@@ -30,6 +30,7 @@ public class UserGroup extends Group {
 
     public UserGroup(Aplayer aplayer){
         setSize(280,180);
+        setDebug(true);
         this.aplayer = aplayer;
         this.cardGroupMaps = new ArrayMap<>();
         this.cardGroups = new Array<>();

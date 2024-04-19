@@ -32,7 +32,7 @@ import kw.test.uno.sign.SignListener;
 import kw.test.uno.utils.UnoUtils;
 
 public class GameScreen extends BaseScreen {
-    private int playerNum = 10;
+    private int playerNum = 3;
     private int initCardNum = 5;
     private Array<UserGroup> userGroups;
     private OutCardGroup outCardGroup;
@@ -44,6 +44,7 @@ public class GameScreen extends BaseScreen {
     private ComputerAi ai;
     private Array<Aplayer> aplayers;
     private Image aiBtn;
+    private Card[] tempCard = new Card[1];
 
     public GameScreen(BaseGame game) {
         super(game);
@@ -59,8 +60,6 @@ public class GameScreen extends BaseScreen {
         this.aiBtn = new Image(Asset.getAsset().getTexture("common/AI.png"));
     }
 
-    private Card[] tempCard = new Card[1];
-
     @Override
     public void initView() {
         super.initView();
@@ -70,6 +69,10 @@ public class GameScreen extends BaseScreen {
         sendCard();
         layoutCard();
         startGame();
+        aiBtn();
+    }
+
+    private void aiBtn() {
         addActor(aiBtn);
         aiBtn.addListener(new OrdinaryButtonListener(){
             @Override
@@ -78,7 +81,7 @@ public class GameScreen extends BaseScreen {
                 UserGroup userGroup = utils.currentPlayer();
                 boolean b = ai.easyAI(userGroup.getAplayer(), recentBean, tempCard);
                 if (b){
-                    sendCard(tempCard[0]);
+                    sendCard(tempCard[0],true);
                 }else {
                     //点击发牌
                     Array<Card> cards = deskCardGroup.sendCard(1);
@@ -86,7 +89,7 @@ public class GameScreen extends BaseScreen {
                     Card card = cards.get(0);
                     //揭牌刚好可以打出
                     if (utils.isLegalToPlay(recentBean,card)) {
-                        sendCard(card);
+                        sendCard(card,true);
                     }else {
                         utils.nextPlayer();
                     }
@@ -159,7 +162,7 @@ public class GameScreen extends BaseScreen {
                 Card card = cards.get(0);
                 //揭牌刚好可以打出
                 if (utils.isLegalToPlay(recentBean,card)) {
-                    sendCard(card);
+                    sendCard(card,false);
                 }else {
                     utils.nextPlayer();
                 }
@@ -220,12 +223,13 @@ public class GameScreen extends BaseScreen {
                 if (!utils.isLegalToPlay(recentBean,card)) {
                     return;
                 }
-                sendCard(card);
+                //选择的牌合法   就打出
+                sendCard(card,false);
             }
         }
     };
 
-    private void sendCard(Card card) {
+    private void sendCard(Card card,boolean auto) {
         UserGroup userGroup = utils.currentPlayer();
         CardGroup cardGroup = userGroup.sendOutCard(card);
         Vector2 vector2 = new Vector2();
@@ -258,15 +262,29 @@ public class GameScreen extends BaseScreen {
                 utils.nextPlayer();
                 break;
             case WILD:
-                showDialog(new SelectColorDialog(recentBean,new SignListener(){
-                    @Override
-                    public void sign(Object object) {
-                        super.sign(object);
-                        updateDirImg();
-                    }
-                }));
+                if (auto){
+                    int v = (int) (CardColor.values().length * Math.random());
+                    recentBean.setCardColor(CardColor.values()[v]);
+                    updateDirImg();
+                }else {
+                    showDialog(new SelectColorDialog(recentBean,new SignListener(){
+                        @Override
+                        public void sign(Object object) {
+                            super.sign(object);
+                            updateDirImg();
+                        }
+                    }));
+                }
                 break;
             case WILD_DRAW4:
+                if (auto){
+                    int v = (int) (CardColor.values().length * Math.random());
+                    recentBean.setCardColor(CardColor.values()[v]);
+                    updateDirImg();
+                    Array<Card> cards1 = deskCardGroup.sendCard(4);
+                    createCard(0,utils.currentPlayer(),cards1);
+                    utils.nextPlayer();
+                }
                 showDialog(new SelectColorDialog(recentBean, new SignListener(){
                     @Override
                     public void sign(Object object) {
@@ -286,4 +304,5 @@ public class GameScreen extends BaseScreen {
         }
         utils.nextPlayer();
     }
+
 }
