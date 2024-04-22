@@ -28,15 +28,17 @@ public class MainScreen extends BaseScreen {
         float v = UnoMathUtils.bgScale();
         bg.setOrigin(Align.center);
         bg.setScale(v);
-        rootView.addActor();
-        BtnGroup startGame = new BtnGroup("start game");
-        addActor(startGame);
-        startGame.addListener(new OrdinaryButtonListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                setScreen(GameScreen.class);
-            }
-        });
+        rootView.addActor(new Table(){{
+            BtnGroup startGame = new BtnGroup("start game");
+            addActor(startGame);
+            startGame.addListener(new OrdinaryButtonListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    setScreen(GameScreen.class);
+                }
+            });
+
+        }});
     }
 }
