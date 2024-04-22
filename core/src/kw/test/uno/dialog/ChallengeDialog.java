@@ -25,6 +25,7 @@ public class ChallengeDialog extends BaseDialog {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 signListener.sign(0);
+                dialogManager.closeDialog(ChallengeDialog.this);
             }
         });
         no.addListener(new OrdinaryButtonListener(){
@@ -32,6 +33,7 @@ public class ChallengeDialog extends BaseDialog {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 signListener.sign(1);
+                dialogManager.closeDialog(ChallengeDialog.this);
             }
         });
     }

@@ -60,6 +60,7 @@ public class GameScreen extends BaseScreen {
         this.aplayers = new Array<>();
         this.ai = new ComputerAi(aplayers);
         this.aiBtn = new Image(Asset.getAsset().getTexture("common/AI.png"));
+        UnoConfig.lastUserIndex = 0;
     }
 
     @Override
@@ -80,7 +81,9 @@ public class GameScreen extends BaseScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                aiRunning();
+                if (UnoConfig.lastUserIndex == 0){
+                    aiRunning();
+                }
             }
         });
     }
@@ -95,6 +98,11 @@ public class GameScreen extends BaseScreen {
             UserGroup currentPlayer = utils.currentPlayer();
             currentPlayer.getAplayer().setWeakCardColor(recentBean.getCardColor());
             Array<Card> cards = deskCardGroup.sendCard(1);
+            if (cards.size<=0) {
+                Array<Card> cards1 = outCardGroup.clearAllCardGroup();
+                deskCardGroup.addOutCard(cards1);
+                cards = deskCardGroup.sendCard(1);
+            }
             createCard(0,userGroup,cards);
             Card card = cards.get(0);
             //揭牌刚好可以打出
@@ -293,7 +301,7 @@ public class GameScreen extends BaseScreen {
                 break;
             case WILD:
                 if (auto){
-                    int v = (int) (CardColor.values().length * Math.random());
+                    int v = (int) ((CardColor.values().length-1) * Math.random())+1;
                     recentBean.setCardColor(CardColor.values()[v]);
                     updateDirImg();
                 }else {

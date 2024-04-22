@@ -82,6 +82,10 @@ public class UnoCardData {
         return cards;
     }
 
+    public void addOutCard(Array<Card> card){
+        deskCard.addAll(card);
+    }
+
     public static void main(String[] args) {
         UnoCardData data = new UnoCardData();
         data.initDeskCard();

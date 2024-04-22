@@ -32,4 +32,8 @@ public class DeskCardGroup extends Group {
         sendCards.addAll(cards);
         return sendCards;
     }
+
+    public void addOutCard(Array<Card> cards1) {
+        unoCardData.addOutCard(cards1);
+    }
 }

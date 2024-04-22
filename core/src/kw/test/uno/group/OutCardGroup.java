@@ -42,6 +42,7 @@ public class OutCardGroup extends Group {
     public Array<Card> clearAllCardGroup(){
         Array<Card> cardGroups = new Array<>(cards);
         cards.clear();
+        clearChildren();
         return cardGroups;
     }
 }
