@@ -14,7 +14,7 @@ import kw.test.uno.data.UnoCardData;
 public class OutCardGroup extends Group {
     private Array<Card> cards = new Array<>();
     public OutCardGroup(){
-        setSize(700,500);
+        setSize(50,50);
     }
 
     public void outCard(Card card, Vector2 vector2, int i){
@@ -24,13 +24,14 @@ public class OutCardGroup extends Group {
         stageToLocalCoordinates(vector2);
         cardGroup.setPosition(vector2.x,vector2.y,Align.center);
         cardGroup.setVisible(false);
+        cardGroup.setOrigin(Align.center);
         cardGroup.addAction(
                 Actions.parallel(
                     Actions.sequence(
                         Actions.delay(i),
                         Actions.visible(true),
-                        Actions.moveTo((float) ((getWidth()-100)*Math.random()),
-                                (float) ((getHeight()-100)*Math.random()),0.2f)
+                        Actions.moveToAligned((float) ((getWidth())*Math.random()),
+                                (float) ((getHeight())*Math.random()),Align.center,0.2f)
                     ),
                     Actions.sequence(
                             Actions.delay(i),

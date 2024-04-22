@@ -73,7 +73,7 @@ public class UnoUtils {
                 return "refresh_icon_green.png";
             }else if (recentBean.getCardColor() == CardColor.RED){
                 return "refresh_icon_red.png";
-            }else if (recentBean.getCardColor() == CardColor.BLUE){
+            }else if (recentBean.getCardColor() == CardColor.YELLOW){
                 return "refresh_icon_yellow.png";
             }
         }
@@ -89,4 +89,5 @@ public class UnoUtils {
         }
         return aplayers.get(userIndex);
     }
+
 }

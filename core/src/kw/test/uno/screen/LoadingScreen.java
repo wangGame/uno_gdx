@@ -11,6 +11,6 @@ public class LoadingScreen extends BaseScreen {
     @Override
     public void initView() {
         super.initView();
-        setScreen(GameScreen.class);
+        setScreen(MainScreen.class);
     }
 }

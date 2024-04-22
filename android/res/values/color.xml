@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <cardColor name="ic_background_color">#63A347</cardColor>
+    <color name="ic_background_color">#63A347</color>
 </resources>

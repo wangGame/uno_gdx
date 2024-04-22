@@ -96,11 +96,12 @@ public class UserGroup extends Group {
             cardGroup.addAction(Actions.sequence(
                     Actions.delay(time),
                     Actions.visible(true),
-                    Actions.moveTo(0,0,0.2f),
+                    Actions.moveToAligned(getWidth()/2.0f,getHeight()/2.0f,Align.center,0.2f),
                     Actions.run(()->{
-                        layoutCard();
-                    })
-            ));
+                        if (time<0.06f){
+                            layoutCard();
+                        }
+                    })));
         }
     }
 
@@ -109,8 +110,13 @@ public class UserGroup extends Group {
         SnapshotArray<Actor> children = cardPanel.getChildren();
         children.sort(Comparator);
         float v = (cardPanel.getWidth()-80) / children.size;
+        if (v > 60){
+            v = 60;
+        }
+        float v1 = v * children.size;
+        float v2 = getWidth() / 2.0f-(v1)/2.0f + 30.0f;
         for (int i = 0; i < children.size; i++) {
-            children.get(i).setX(v * i);
+            children.get(i).addAction(Actions.moveToAligned(v2 + v * i,getHeight()/2.0f,Align.center,0.1f+(i * 0.05f)));
         }
     }
 
@@ -131,13 +137,15 @@ public class UserGroup extends Group {
         }
     };
 
-    public CardGroup sendOutCard(Card card){
+    public CardGroup sendOutCard(Card card, boolean auto){
         CardGroup cardGroup = cardGroupMaps.get(card);
         aplayer.outCard(card); //删除数据
         cardGroupMaps.removeKey(card);
         cardGroups.removeValue(cardGroup,false);
-        if (aplayer.getCards().size == 1) {
-            unoImg.setVisible(true);
+        if (!auto) {
+            if (aplayer.getCards().size == 1) {
+                unoImg.setVisible(true);
+            }
         }
         return cardGroup;
     }

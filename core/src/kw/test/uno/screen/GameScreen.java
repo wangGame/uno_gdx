@@ -34,8 +34,8 @@ import kw.test.uno.sign.SignListener;
 import kw.test.uno.utils.UnoUtils;
 
 public class GameScreen extends BaseScreen {
-    private int playerNum = 3;
-    private int initCardNum = 5;
+    private int playerNum = 7;
+    private int initCardNum = 7;
     private Array<UserGroup> userGroups;
     private OutCardGroup outCardGroup;
     private DeskCardGroup deskCardGroup;
@@ -115,7 +115,7 @@ public class GameScreen extends BaseScreen {
     private void initBg() {
         Image bg = new Image(Asset.getAsset().getTexture("bg_welcome.png"));
         rootView.addActor(bg);
-        float bgScale = Math.max(Constant.GAMEHIGHT/1600.0f,Constant.GAMEHIGHT/900.0f); //1600 900
+        float bgScale = Math.max(Constant.GAMEHIGHT/1600.0f,Constant.GAMEWIDTH/900.0f); //1600 900
         bg.setOrigin(Align.center);
         bg.setScale(bgScale);
         bg.setPosition(960.0f,540.0f,Align.center);
@@ -144,7 +144,7 @@ public class GameScreen extends BaseScreen {
         }
         this.dirImg = new Image(Asset.getAsset().getTexture("dirimg/"+utils.dirDirName(recentBean)));
         rootView.addActor(dirImg);
-        dirImg.setPosition(Constant.WIDTH/2.0f,Constant.HIGHT/2.0f,Align.center);
+        dirImg.setPosition(Constant.WIDTH/2.0f + 80,Constant.HIGHT/2.0f,Align.center);
         dirImg.setOrigin(Align.center);
         if (UnoConfig.DIR == UnoConfig.DIR_LEFT){
             dirImg.addAction(Actions.forever(
@@ -212,21 +212,26 @@ public class GameScreen extends BaseScreen {
             userGroup.setOrigin(Align.center);
             userGroup.setRotation(90 + i * (360.f/playerNum)- 90);
         }
+        outCardGroup.toFront();
     }
 
     private void layoutCard() {
-        for (UserGroup userGroup : userGroups) {
-            userGroup.layoutCard();
-        }
+        stage.addAction(Actions.delay(sendCardTime + 0.3f,
+                Actions.run(()->{
+                    for (UserGroup userGroup : userGroups) {
+                        userGroup.layoutCard();
+                    }
+                })));
     }
 
+    private float sendCardTime;
     private void sendCard() {
-        float time = 0;
+        sendCardTime = 0;
         for (int i = 0; i < initCardNum; i++) {
             for (UserGroup userGroup : userGroups) {
-                time += 0.1f;
+                sendCardTime += 0.1f;
                 Array<Card> cards = deskCardGroup.sendCard(1);
-                createCard(time, userGroup, cards);
+                createCard(sendCardTime, userGroup, cards);
             }
         }
     }
@@ -253,13 +258,13 @@ public class GameScreen extends BaseScreen {
 
     private void sendCard(Card card,boolean auto) {
         UserGroup userGroup = utils.currentPlayer();
-        CardGroup cardGroup = userGroup.sendOutCard(card);
+        CardGroup cardGroup = userGroup.sendOutCard(card,auto);
         Vector2 vector2 = new Vector2();
         vector2.set(cardGroup.getX(),cardGroup.getY());
         cardGroup.getParent().localToStageCoordinates(vector2);
         cardGroup.remove();
-        outCardGroup.outCard(card,new Vector2(vector2),0);
         userGroup.layoutCard();
+        outCardGroup.outCard(card,new Vector2(vector2),0);
         CardColor oldCardColor = recentBean.getCardColor();
         recentBean.setCardValue(card.getCardValue());
         recentBean.setCardColor(card.getCardColor());
@@ -345,35 +350,12 @@ public class GameScreen extends BaseScreen {
         }
         UserGroup currentPlayer = utils.currentPlayer();
         if (currentPlayer.getAplayer().getCards().size == 0) {
-            showDialog(new SuccessDialog());
+            showDialog(new SuccessDialog(GameScreen.this));
             return;
         }
         utils.nextPlayer();
         if (challege){
-            if (auto) {
-                if (ai.needToChallenge(recentBean,utils,oldCardColor)) {
-                    UserGroup prevTempPlayer = utils.prevTempPlayer();
-                    Array<Card> cards = prevTempPlayer.getAplayer().getCards();
-                    Card random = cards.random();
-                    if (random.getCardColor() == oldColor){
-                        createCard(0,prevTempPlayer,cards);
-                    }else {
-                        createCard(0,utils.currentPlayer(),cards);
-                        utils.nextPlayer();
-                    }
-                }else {
-                    Array<Card> cards1 = deskCardGroup.sendCard(4);
-                    createCard(0,utils.currentPlayer(),cards1);
-                    utils.nextPlayer();
-                }
-                UserGroup currentPlayer1 = utils.currentPlayer();
-                if (currentPlayer1.getAplayer().getIndex() != 0) {
-                    stage.addAction(Actions.delay(1, Actions.run(() -> {
-                        aiRunning();
-                    })));
-                }
-
-            }else {
+            if (utils.currentPlayer().getAplayer().getIndex() == 0){
                 showDialog(new ChallengeDialog(new SignListener(){
                     @Override
                     public void sign(Object object) {
@@ -404,6 +386,29 @@ public class GameScreen extends BaseScreen {
                         }
                     }
                 }));
+            }else {
+                if (ai.needToChallenge(recentBean,utils,oldCardColor)) {
+                    UserGroup prevTempPlayer = utils.prevTempPlayer();
+                    Array<Card> cards = prevTempPlayer.getAplayer().getCards();
+                    Card random = cards.random();
+                    if (random.getCardColor() == oldColor){
+                        createCard(0,prevTempPlayer,cards);
+                    }else {
+                        createCard(0,utils.currentPlayer(),cards);
+                        utils.nextPlayer();
+                    }
+                }else {
+                    Array<Card> cards1 = deskCardGroup.sendCard(4);
+                    createCard(0,utils.currentPlayer(),cards1);
+                    utils.nextPlayer();
+                }
+                UserGroup currentPlayer1 = utils.currentPlayer();
+                if (currentPlayer1.getAplayer().getIndex() != 0) {
+                    stage.addAction(Actions.delay(1, Actions.run(() -> {
+                        aiRunning();
+                    })));
+                }
+
             }
         }else {
             if (!showSelectColor) {
