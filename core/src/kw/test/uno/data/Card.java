@@ -33,4 +33,8 @@ public class Card {
                 ", cardValue=" + cardValue +
                 '}';
     }
+
+    public boolean isWild() {
+        return cardValue == CardValue.WILD || cardValue == CardValue.WILD_DRAW4;
+    }
 }
