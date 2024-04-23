@@ -21,7 +21,7 @@ public class MainScreen extends BaseScreen {
     @Override
     public void initView() {
         super.initView();
-        Image bg = new Image(Asset.getAsset().getTexture("bg_welcome.png"));
+        Image bg = new Image(Asset.getAsset().getTexture("bg/bg_welcome.png"));
         rootView.addActor(bg);
         bg.setSize(Constant.GAMEWIDTH,Constant.GAMEHIGHT);
         bg.setPosition(Constant.WIDTH/2.0f,Constant.HIGHT/2.0f, Align.center);

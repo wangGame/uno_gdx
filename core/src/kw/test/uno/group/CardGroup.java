@@ -16,36 +16,37 @@ public class CardGroup extends Group {
         this.card = card;
         int vOrdinal = card.getCardValue().ordinal();
         int cOrdinal = card.getCardColor().ordinal();
-        String str;
+        StringBuilder str = new StringBuilder();
+        str.append("card/");
         if (!hide){
-            str = "front_";
+            str.append("front_");
             if (cOrdinal == 1) {
-                str += "r";
+                str.append("r");
             } else if (cOrdinal == 2) {
-                str += "b";
+                str.append("b");
             } else if (cOrdinal == 3) {
-                str += "g";
+                str.append("g");
             } else if (cOrdinal == 4) {
-                str += "y";
+                str.append("y");
             }
             if (vOrdinal == 10) {
-                str += "d2";
+                str.append("d2");
             } else if (vOrdinal == 11) {
-                str += "r";
+                str.append("r");
             } else if (vOrdinal == 12) {
-                str += "s";
+                str.append("s");
             } else if (vOrdinal == 13) {
-                str += "w";
+                str.append("w");
             } else if (vOrdinal == 14) {
-                str += "w4";
+                str.append("w4");
             } else {
-                str += vOrdinal;
+                str.append(vOrdinal);
             }
-            str += ".png";
+            str.append(".png");
         }else {
-             str = "back.png";
+             str.append("back.png");
          }
-        cardImg = new Image(Asset.getAsset().getTexture(str));
+        cardImg = new Image(Asset.getAsset().getTexture(str.toString()));
         addActor(cardImg);
         setSize(cardImg.getWidth(),cardImg.getHeight());
     }

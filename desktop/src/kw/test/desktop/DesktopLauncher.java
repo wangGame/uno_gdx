@@ -11,8 +11,8 @@ public class DesktopLauncher extends LibGdxTestMain {
         config.x = 1200;
         config.stencil = 8;
         config.y = 0;
-        config.height = (int) (720);
-        config.width = (int) (1280);
+        config.height = (int) (720 * 0.4f);
+        config.width = (int) (1280 * 0.4f);
         new LwjglApplication(new UnoGame(), config);
     }
 

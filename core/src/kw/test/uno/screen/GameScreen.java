@@ -121,7 +121,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private void initBg() {
-        Image bg = new Image(Asset.getAsset().getTexture("bg_welcome.png"));
+        Image bg = new Image(Asset.getAsset().getTexture("bg/bg_welcome.png"));
         rootView.addActor(bg);
         float bgScale = Math.max(Constant.GAMEHIGHT/1600.0f,Constant.GAMEWIDTH/900.0f); //1600 900
         bg.setOrigin(Align.center);
@@ -324,7 +324,7 @@ public class GameScreen extends BaseScreen {
             case WILD_DRAW4:
                 challege = true;
                 if (auto){
-                    int v = (int) (CardColor.values().length * Math.random());
+                    int v = (int) ((CardColor.values().length-1) * Math.random())+1;
                     recentBean.setCardColor(CardColor.values()[v]);
                     updateDirImg();
 //                    if (ai.needToChallenge(recentBean,utils)){
@@ -378,10 +378,11 @@ public class GameScreen extends BaseScreen {
                                 UserGroup prevTempPlayer = utils.prevTempPlayer();
                                 Array<Card> cards = prevTempPlayer.getAplayer().getCards();
                                 Card random = cards.random();
+                                Array<Card> cards1 = deskCardGroup.sendCard(4);
                                 if (random.getCardColor() == oldColor){
-                                    createCard(0,prevTempPlayer,cards);
+                                    createCard(0,prevTempPlayer,cards1);
                                 }else {
-                                    createCard(0,utils.currentPlayer(),cards);
+                                    createCard(0,utils.currentPlayer(),cards1);
                                     utils.nextPlayer();
                                 }
                             }
@@ -399,10 +400,11 @@ public class GameScreen extends BaseScreen {
                     UserGroup prevTempPlayer = utils.prevTempPlayer();
                     Array<Card> cards = prevTempPlayer.getAplayer().getCards();
                     Card random = cards.random();
+                    Array<Card> cards1 = deskCardGroup.sendCard(4);
                     if (random.getCardColor() == oldColor){
-                        createCard(0,prevTempPlayer,cards);
+                        createCard(0,prevTempPlayer,cards1);
                     }else {
-                        createCard(0,utils.currentPlayer(),cards);
+                        createCard(0,utils.currentPlayer(),cards1);
                         utils.nextPlayer();
                     }
                 }else {

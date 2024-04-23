@@ -17,7 +17,7 @@ public class DeskCardGroup extends Group {
         setSize(121,181);
         this.unoCardData = unoCardData;
 //        card
-        Image image = new Image(Asset.getAsset().getTexture("back.png"));
+        Image image = new Image(Asset.getAsset().getTexture("card/back.png"));
         addActor(image);
         image.setPosition(getWidth()/2.0f,getHeight()/2.0f, Align.center);
 
