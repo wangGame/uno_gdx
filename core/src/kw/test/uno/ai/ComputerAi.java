@@ -192,7 +192,7 @@ public class ComputerAi {
         return false;
     }
 
-    public boolean easyAI(Aplayer aplayer,RecentBean bean,Card[] outCard){
+    public boolean easyAI(Aplayer aplayer, RecentBean bean, Card[] outCard, UnoUtils utils){
         outCard[0] = null;
         Array<Card> hand = aplayer.getCards();
         Card card;
@@ -240,11 +240,15 @@ public class ComputerAi {
                         break; // case REV
 
                     case WILD:
-                        iWD = i;
+                        if (card.getCardColor() == bean.getCardColor()) {
+                            iWD = i;
+                        }
                         break; // case WILD
 
                     case WILD_DRAW4:
-                        iWD4 = i;
+                        if (card.getCardColor() == bean.getCardColor()) {
+                            iWD4 = i;
+                        }
                         break; // case WILD_DRAW4
 
                     case NUM7:
@@ -260,6 +264,22 @@ public class ComputerAi {
                             iNM = i;
                         break; // default
                 }
+            }
+        }
+
+        //下家uno，那么就加牌
+        UserGroup userGroup = utils.nextTempPlayer();
+        if (userGroup.getAplayer().getCards().size<2) {
+            if (iDW>=0){
+                outCard[0] = hand.get(iDW);
+            }else if (iSK>=0){
+                outCard[0] = hand.get(iSK);
+            }else if (iRV>=0){
+                outCard[0] = hand.get(iRV);
+            }else if (iWD>=0){
+                outCard[0] = hand.get(iWD);
+            }else if (iWD4>=0){
+                outCard[0] = hand.get(iWD4);
             }
         }
         if (outCard[0] == null){

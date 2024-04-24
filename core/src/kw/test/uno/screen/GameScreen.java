@@ -90,7 +90,7 @@ public class GameScreen extends BaseScreen {
 
     private void aiRunning() {
         UserGroup userGroup = utils.currentPlayer();
-        boolean b = ai.easyAI(userGroup.getAplayer(), recentBean, tempCard);
+        boolean b = ai.easyAI(userGroup.getAplayer(), recentBean, tempCard,utils);
         if (b){
             sendCard(tempCard[0],true);
         }else {
