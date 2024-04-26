@@ -30,7 +30,7 @@ public class MainScreen extends BaseScreen {
         bg.setScale(v);
         rootView.addActor(new Table(){{
             BtnGroup startGame = new BtnGroup("start game");
-            addActor(startGame);
+            add(startGame);
             startGame.addListener(new OrdinaryButtonListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -38,7 +38,8 @@ public class MainScreen extends BaseScreen {
                     setScreen(GameScreen.class);
                 }
             });
-
+            pack();
+            setPosition(Constant.WIDTH/2.0f,Constant.HIGHT/2.0f,Align.center);
         }});
     }
 }
